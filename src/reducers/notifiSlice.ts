@@ -6,6 +6,7 @@ const notifiSlice = createSlice({
         type: 'hidden',
         message: false,
         button: false,
+        title: '',
     },
     reducers: {
         showOff(state) {
@@ -20,6 +21,7 @@ const notifiSlice = createSlice({
             state.type = 'modal';
             state.message = action.payload.message;
             state.button = action.payload?.button || false;
+            state.title = action.payload.title;
         },
     },
 });

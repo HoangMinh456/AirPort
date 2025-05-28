@@ -11,6 +11,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Zocial from 'react-native-vector-icons/Zocial';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const IconMap = {
     MaterialIcons: MaterialIcons,
@@ -25,7 +27,9 @@ const IconMap = {
     MaterialCommunityIcons: MaterialCommunityIcons,
     Octicons: Octicons,
     SimpleLineIcons: SimpleLineIcons,
-    Zocial: Zocial
+    Zocial: Zocial,
+    FontAwesome6: FontAwesome6,
+    FontAwesome5: FontAwesome5
 }
 
 type TypeIcon =
@@ -42,11 +46,13 @@ type TypeIcon =
     | 'Octicons'
     | 'SimpleLineIcons'
     | 'Zocial'
+    | 'FontAwesome6'
+    | 'FontAwesome5'
 
-const Icons = ({ typeIcon, nameIcon, sizeIcon, colorIcon }: { typeIcon: TypeIcon, nameIcon: string, sizeIcon?: number, colorIcon?: string }) => {
+const Icons = ({ typeIcon, nameIcon, sizeIcon, colorIcon, className }: { typeIcon: TypeIcon, nameIcon: string, sizeIcon?: number, colorIcon?: string, className?: any }) => {
     var CustomIcon = IconMap[typeIcon] || Entypo
     return (
-        <CustomIcon name={nameIcon} size={sizeIcon || 24} color={colorIcon || '#fff'} />
+        <CustomIcon className={className} name={nameIcon} size={sizeIcon || 24} color={colorIcon || '#fff'} />
     )
 }
 

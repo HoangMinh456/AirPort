@@ -10,6 +10,7 @@ const CustomText = ({ children, style, className }: { children: any, style?: any
 const styles = StyleSheet.create({
     fontDefault: {
         fontFamily: 'Inter-VariableFont_opsz,wght',
+        // color: '#000'
     },
 });
 

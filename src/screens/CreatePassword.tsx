@@ -39,7 +39,7 @@ export default function CreatePassword() {
                                     />
                                 )}
                             />
-                            {errors.password && <CustomText className="text-red-500 font-bold pl-2">{errors.password.message}</CustomText>}
+                            {errors.password && <CustomText style={styles.errorText}>{errors.password.message}</CustomText>}
                         </View>
                         <View>
                             <Controller
@@ -61,7 +61,7 @@ export default function CreatePassword() {
                                     />
                                 )}
                             />
-                            {errors.confirmPassword && <CustomText className="text-red-500 font-bold pl-2">{errors.confirmPassword.message}</CustomText>}
+                            {errors.confirmPassword && <CustomText style={styles.errorText}>{errors.confirmPassword.message}</CustomText>}
                         </View>
                     </View>
                     <View style={styles.viewProviderButton}>
@@ -76,6 +76,11 @@ export default function CreatePassword() {
 }
 
 const styles = StyleSheet.create({
+    errorText: {
+        color: '#ef4444',
+        fontWeight: '700',
+        paddingLeft: 8
+    },
     title: {
         fontSize: 20,
         lineHeight: 28,

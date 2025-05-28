@@ -11,15 +11,16 @@ export default function NotifiModal() {
     const notifiType = useSelector((state: any) => state.notifi.type);
     const message = useSelector((state: any) => state.notifi.message);
     const button = useSelector((state: any) => state.notifi.button);
+    const title = useSelector((state: any) => state.notifi.title);
 
     if (notifiType === 'hidden') { return null; }
 
     return (
         <Modal animationType="fade" visible={true} transparent={true}>
             <View className={`w-${width}px h-screen flex justify-center items-center bg-black/50`}>
-                <View style={{ width: width * 9 / 10 }} className="bg-white rounded-xl p-4">
-                    <CustomText className="text-black font-bold text-xl text-center">Thông báo</CustomText>
-                    <CustomText className="text-black py-8 text-center">{message}</CustomText>
+                <View style={{ width: width * 9 / 10 }} className="bg-white rounded-xl p-4 gap-y-8">
+                    <CustomText className="text-black font-bold text-xl text-center">{title}</CustomText>
+                    {message && <CustomText className="text-black text-center">{message}</CustomText>}
                     {button
                         ?
                         <View className="flex gap-y-2">

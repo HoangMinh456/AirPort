@@ -5,6 +5,7 @@ import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
+import AgreePolicy from "../components/AgreePolicy";
 
 const { width, height } = Dimensions.get('window');
 
@@ -47,7 +48,7 @@ export default function SignUpScreen({ navigation }: any) {
                                     />
                                 )}
                             />
-                            {errors.phone && <CustomText className="text-red-500 font-bold pl-2">{errors.phone.message}</CustomText>}
+                            {errors.phone && <CustomText style={styles.errorText}>{errors.phone.message}</CustomText>}
                         </View>
 
                         <Controller
@@ -55,19 +56,7 @@ export default function SignUpScreen({ navigation }: any) {
                             name="policy"
                             rules={{ required: 'Bạn phải đồng ý với điều khoản' }}
                             render={({ field: { onChange, value } }) => (
-                                <View className="flex flex-row justify-start items-start">
-                                    <CheckBox
-                                        value={value}
-                                        onValueChange={onChange}
-                                        tintColors={{
-                                            false: '#6F6F6F',
-                                            true: CustomColors.primary
-                                        }}
-                                    />
-                                    <View className="flex flex-1 pt-1">
-                                        <CustomText className="text-black">Bạn đồng ý với <CustomText className="text-[#127EC3] font-semibold">Điều khoản dịch vụ</CustomText> và <CustomText className="text-[#127EC3] font-semibold">Chính sách bảo mật</CustomText> của AirPort</CustomText>
-                                    </View>
-                                </View>
+                                <AgreePolicy value={value} onChange={onChange} />
                             )}
                         />
                     </View>
@@ -83,6 +72,11 @@ export default function SignUpScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
+    errorText: {
+        color: '#ef4444',
+        fontWeight: '700',
+        paddingLeft: 8
+    },
     title: {
         fontSize: 20,
         lineHeight: 28,

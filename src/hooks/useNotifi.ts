@@ -12,10 +12,8 @@ const useNotifi = () => {
         dispatch(showLoading());
     };
 
-    const modal = ({ message, button }: { message: string, button?: boolean }) => {
-        console.log('notifi mess: ', message);
-        dispatch(ShowModal({ message: message, button: button }));
-        console.log('dispatch active');
+    const modal = ({ message, button, title }: { message?: string, button?: boolean, title: string }) => {
+        dispatch(ShowModal({ message: message, button: button, title: title }));
     };
 
     return { hidden, loading, modal };

@@ -10,14 +10,14 @@ const { width, height } = Dimensions.get('window');
 
 export default function SignInScreen({ navigation }: any) {
     const { control, handleSubmit, formState: { errors } } = useForm();
-    const { hidden, loading, modal } = useNotifi();
+    const { modal } = useNotifi();
 
     const onSubmit = (data: any) => {
         console.log(data);
     }
 
     return (
-        <ImageBackground style={styles.image} source={require('../assets/background.jpg')} resizeMode="cover" >
+        <ImageBackground style={styles.image} source={require('../assets/background.jpg')} resizeMode="cover">
             <FastImage style={styles.fastImage} source={Image.resolveAssetSource(require('../assets/logo.png'))} resizeMode="center" />
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.viewForm}>
@@ -41,6 +41,7 @@ export default function SignInScreen({ navigation }: any) {
                                     />
                                 )}
                             />
+                            {errors.phone && <CustomText style={styles.errorText}>{errors.phone.message}</CustomText>}
                         </View>
                         <View className="flex flex-col gap-y-2">
                             <Controller
@@ -61,8 +62,9 @@ export default function SignInScreen({ navigation }: any) {
                                     />
                                 )}
                             />
+                            {errors.password && <CustomText style={styles.errorText}>{errors.password.message}</CustomText>}
                             <View className="flex flex-row justify-end">
-                                <TouchableOpacity onPress={() => { console.log('action'); modal({ message: 'Thông báo của thông báo', button: true }); }}>
+                                <TouchableOpacity onPress={() => { console.log('action'); modal({ title: 'Thông báo', message: 'Thông báo của thông báo', button: true }); }}>
                                     <CustomText style={styles.forgotPass}>Quên mật khẩu?</CustomText>
                                 </TouchableOpacity>
                             </View>
@@ -84,6 +86,11 @@ export default function SignInScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
+    errorText: {
+        color: '#ef4444',
+        fontWeight: '700',
+        paddingLeft: 8
+    },
     forgotPass: {
         color: '#1875AF',
         fontSize: 14,

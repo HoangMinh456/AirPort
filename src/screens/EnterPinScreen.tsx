@@ -3,8 +3,6 @@ import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, Sty
 import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
-import useNotifi from "../hooks/useNotifi";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,9 +11,10 @@ export default function EnterPinScreen({ navigation }: any) {
     const [pin, setPin] = useState(Array(length).fill(''))
     const inputs = useRef<Array<TextInput | null>>([]);
     const [disableButton, setDisableButton] = useState<boolean>(true);
+    const [timeLeft, setTimeLeft] = useState<number>(300);
+    const [reSended, setReSended] = useState<number>(0);
 
-    const { modal } = useNotifi();
-
+    //Auto focus khoảng trống
     useEffect(() => {
         for (let i = 0; i < length; i++) {
             if (pin[i] === '') {
@@ -25,6 +24,7 @@ export default function EnterPinScreen({ navigation }: any) {
         }
     }, [pin])
 
+    //Hàm nhập số PIN
     const handleChange = (text: any, index: number) => {
         if (/^\d?$/.test(text)) {
             const newPin = [...pin]
@@ -40,6 +40,7 @@ export default function EnterPinScreen({ navigation }: any) {
         }
     }
 
+    //Hàm xử lý khi xóa số PIN
     const handleBackspace = (e: any, index: number) => {
         if (e.nativeEvent.key === 'Backspace' && pin[index] === '' && index > 0) {
             console.log('backspaceActive')
@@ -49,9 +50,34 @@ export default function EnterPinScreen({ navigation }: any) {
                 newPin[index - 1] = ''
                 setPin(newPin);
             }, 100)
-
         }
     }
+    //Count Down
+    useEffect(() => {
+        if (timeLeft <= 0) return;
+
+        const countDown = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000)
+
+        return () => { clearInterval(countDown) }
+    }, [timeLeft])
+    //Count Down
+    useEffect(() => {
+        if (reSended <= 0) return;
+
+        const countDownReSend = setInterval(() => {
+            setReSended((prev) => prev - 1);
+        }, 1000)
+
+        return () => { clearInterval(countDownReSend) }
+    }, [reSended])
+    //Chuyển đổi số thành phút và giây
+    const formatTime = (time: number) => {
+        const minutes = Math.floor(time / 60)
+        const seconds = time % 60
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
 
     const onSubmit = () => {
         navigation.navigate('CreatePassword');
@@ -64,7 +90,7 @@ export default function EnterPinScreen({ navigation }: any) {
                 <View style={styles.viewForm}>
                     <View>
                         <CustomText style={styles.title}>Nhập mã xác thực</CustomText>
-                        <CustomText className="text-center" style={{ fontSize: 12 }}>Mã xác thực được gửi tới số điện thoại/email</CustomText>
+                        <CustomText style={styles.verifyCode}>Mã xác thực được gửi tới số điện thoại/email</CustomText>
                     </View>
                     <View className='flex flex-row gap-x-5 w-full'>
                         {pin.map((input, index) => (
@@ -81,15 +107,17 @@ export default function EnterPinScreen({ navigation }: any) {
                             />
                         ))}
                     </View>
-                    <View className="flex flex-row items-end justify-center gap-x-1">
-                        <CustomText className="pb-[2px]" style={{ fontSize: 13, color: '#747474' }}>Hết hạn:</CustomText>
-                        <CustomText style={{ fontSize: 20, color: CustomColors.primary }}>03:50</CustomText>
+                    <View style={styles.endUseContainer}>
+                        <CustomText style={styles.countDownText}>Hết hạn:</CustomText>
+                        <CustomText style={styles.counDownNumber}>{formatTime(timeLeft)}</CustomText>
                     </View>
                     <View style={styles.viewProviderButton}>
                         <TouchableOpacity disabled={disableButton} onPress={() => onSubmit()} style={[styles.viewButton, !disableButton && { opacity: 1 }]}>
                             <CustomText style={styles.textButtonWhite}>Tiếp tục</CustomText>
                         </TouchableOpacity>
-                        <CustomText className="text-black text-center">Không nhận được mã?</CustomText>
+                        <TouchableOpacity disabled={reSended > 0} style={{ opacity: reSended > 0 ? 0.5 : 1 }} onPress={() => setReSended(70)}>
+                            <CustomText style={styles.noCodeSended}>Không nhận được mã? {reSended > 0 && `(Gửi lại sau: ${formatTime(reSended)})`}</CustomText>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </KeyboardAvoidingView >
@@ -98,6 +126,30 @@ export default function EnterPinScreen({ navigation }: any) {
 };
 
 const styles = StyleSheet.create({
+    noCodeSended: {
+        color: '#000',
+        textAlign: 'center',
+    },
+    counDownNumber: {
+        fontSize: 20,
+        color: CustomColors.primary
+    },
+    countDownText: {
+        paddingBottom: 2,
+        fontSize: 13,
+        color: '#747474',
+    },
+    endUseContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        columnGap: 4,
+    },
+    verifyCode: {
+        fontSize: 12,
+        textAlign: 'center',
+    },
     title: {
         fontSize: 20,
         lineHeight: 28,
