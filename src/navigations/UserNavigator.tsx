@@ -7,6 +7,7 @@ import CustomColors from "../../colors";
 import SnapShootTicket from "../screens/SnapShootTicket";
 import SignCustomer from "../screens/SignCustomer";
 import EnterEcodeScreen from "../screens/EnterEcodeScreen";
+import HistoryScreen from "../screens/HistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function UserNavigator() {
                 <Stack.Screen name="SnapShootTicket" component={SnapShootTicket} options={{ headerShown: false }} />
                 <Stack.Screen name="SignCustomer" component={SignCustomer} options={{ headerShown: false }} />
                 <Stack.Screen name="EnterEcode" component={EnterEcodeScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="History" component={HistoryScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </SafeAreaView>
     )
