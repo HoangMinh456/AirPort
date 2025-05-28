@@ -1,124 +1,75 @@
-import { useNavigation } from "@react-navigation/native";
-import HeaderNavigation from "../components/HeaderNavigation";
-import { Dimensions, Image, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from "react-native";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
+import FastImage from "react-native-fast-image";
+import CustomColors from "../../colors";
+import Button from "../components/Button";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
-import CustomColors from "../../colors";
-import FastImage from "react-native-fast-image";
-import Icons from "../components/Icons";
+import HeaderNavigation from "../components/HeaderNavigation";
+import TableUserInfor from "../components/TableUserInfor";
 import { useState } from "react";
+import useNotifi from "../hooks/useNotifi";
 
 const { width, height } = Dimensions.get('window');
 
-export default function User() {
-    // const [turnUsed, setTurnUsed] = useState(0);
+export default function User({ navigation }: any) {
+    const { control, handleSubmit, formState: { errors } } = useForm();
+    const [showUserCard, setShowUserCard] = useState<boolean>(false)
+    const { modal } = useNotifi();
+
+    const onSubmit = (data: any) => {
+        console.log('data: ', data)
+        console.log('showUserCard: ', showUserCard)
+        if (showUserCard === true && data.numberCard === '24042004') {
+            navigation.navigate('SnapShootTicket');
+            return
+        }
+
+        if (data.numberCard === '24042004' && showUserCard === false) {
+            setShowUserCard(true)
+            return
+        }
+
+        modal({ title: 'Thông báo', message: 'Số thẻ không đúng, vui lòng kiểm tra lại!' })
+
+    }
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
-            <HeaderNavigation title="Thông tin khách hàng" />
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <ScrollView>
-                    <View className="grow flex gap-y-[18px]">
-                        <View className="bg-white pt-6 pb-4 px-4 flex gap-y-[10px] rounded-bl-3xl rounded-br-3xl">
-                            <CustomText className="text-black font-bold">Số thẻ</CustomText>
-                            <CustomTextInput
-                                placeholder="Nhập số thẻ"
-                                placeholderTextColor={CustomColors.sercond}
-                                style={{ borderWidth: 1, borderColor: CustomColors.sercond, borderRadius: 10, paddingHorizontal: 20, paddingVertical: 16, fontSize: 14 }}
-                            />
-                        </View>
-                        <View className="flex items-center gap-y-5">
-                            <FastImage style={{ width: 340, height: 214 }} source={Image.resolveAssetSource(require('../assets/card.png'))} resizeMode="stretch" />
-                            <View className="flex px-4">
-                                <View style={{ display: 'flex', rowGap: 14 }} className="rounded-tl-[10px] rounded-tr-[10px] bg-white p-4">
-                                    <View className="flex flex-row justify-between items-center gap-x-3">
-                                        <View style={{ paddingVertical: 6, paddingHorizontal: 8, borderRadius: 9999, backgroundColor: '#0D5AA690', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Icons typeIcon="FontAwesome6" nameIcon="user" colorIcon="#fff" sizeIcon={22} />
-                                        </View>
-                                        <View style={{ flexGrow: 1 }}>
-                                            <CustomText style={{ color: '#05213D', fontWeight: '700', fontSize: 18 }} className="uppercase">nguyễn vân anh</CustomText>
-                                            <CustomText style={{ fontSize: 11, color: '#6C6C6C' }} className="uppercase">mkh: hgui68dv</CustomText>
-                                        </View>
-                                        <Icons typeIcon="Octicons" nameIcon="history" colorIcon="#0D5AA690" sizeIcon={24} />
+            <View className="flex justify-between h-full flex-1">
+                <HeaderNavigation title="Thông tin khách hàng" />
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} className="h-full grow flex flex-1">
+                    <View className="flex h-full flex-1 CONTANER_SCROLL_VIEW">
+                        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                            <View className="grow">
+                                <View className="flex gap-y-[18px]">
+                                    <View className="bg-white pt-6 pb-4 px-4 flex gap-y-[10px] rounded-bl-3xl rounded-br-3xl">
+                                        <CustomText className="text-black font-bold">Số thẻ</CustomText>
+                                        <Controller
+                                            control={control}
+                                            name="numberCard"
+                                            render={({ field: { value, onChange } }) => (
+                                                <CustomTextInput
+                                                    value={value}
+                                                    onChangeText={onChange}
+                                                    placeholder="Nhập số thẻ"
+                                                    placeholderTextColor={CustomColors.sercond}
+                                                    style={{ borderWidth: 1, borderColor: CustomColors.sercond, borderRadius: 10, paddingHorizontal: 20, paddingVertical: 16, fontSize: 14 }}
+                                                />
+                                            )}
+                                        />
                                     </View>
-                                    <View style={{ display: 'flex', flexDirection: 'row', borderTopWidth: 1, borderBottomWidth: 1, borderColor: '#DDDDDD', paddingVertical: 8 }}>
-                                        <View style={{ paddingVertical: 8, display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <CustomText className="text-black">Tổng số lượt:</CustomText>
-                                            <CustomText style={{ fontSize: 20, fontWeight: '700', color: '#0D5AA6' }}>10</CustomText>
-                                        </View>
-                                        <View style={{ width: 1, backgroundColor: '#DDDDDD', marginHorizontal: 16 }}></View>
-                                        <View style={{ paddingVertical: 8, display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <CustomText className="text-black">Số lượt đã sử dụng:</CustomText>
-                                            <CustomText style={{ fontSize: 20, fontWeight: '700', color: CustomColors.primary }}>2</CustomText>
-                                        </View>
+                                    <View className="flex items-center gap-y-5">
+                                        <FastImage style={{ width: 340, height: 214 }} source={Image.resolveAssetSource(require('../assets/card.png'))} resizeMode="stretch" />
                                     </View>
-                                    <View className="flex flex-row gap-x-8">
-                                        <CustomText style={{ marginTop: 4, color: '#000000' }}>Còn lại:</CustomText>
-                                        <View className="flex flex-1">
-                                            <View className="flex flex-row items-center">
-                                                <CustomText style={{ fontSize: 20, color: '#E78700', fontWeight: '700', marginRight: 8 }}>3</CustomText>
-                                                <CustomText style={{ color: '#6C6C6C', marginRight: 4 }}>(HSD: 31/08/2025)</CustomText>
-                                                <CustomText style={{ color: '#6C6C6C', fontStyle: 'italic', fontWeight: '200', flex: 1 }}>Áp dụng cho 1 khách</CustomText>
-                                            </View>
-                                            <View style={{ height: 1, backgroundColor: '#DDDDDD', marginVertical: 8 }}></View>
-                                            <View className="flex flex-row items-center">
-                                                <CustomText style={{ fontSize: 20, color: '#06BA36', fontWeight: '700', marginRight: 8 }}>5</CustomText>
-                                                <CustomText style={{ color: '#6C6C6C', marginRight: 4 }}>(HSD: 31/08/2025)</CustomText>
-                                                <CustomText style={{ color: '#6C6C6C', fontStyle: 'italic', fontWeight: '200', flex: 1 }}>Được thêm 1 khách đi kèm</CustomText>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View className="bg-white flex flex-row justify-between items-center w-full relative p-4">
-                                    <View style={{ backgroundColor: '#E6E6E6', borderRadius: 9999, position: 'absolute', zIndex: 20, left: -15 }} className="p-4 rounded-full"></View>
-                                    <View style={{ height: 1, flexGrow: 1, backgroundColor: '#E6E6E6' }}></View>
-                                    <View style={{ backgroundColor: '#E6E6E6', borderRadius: 9999, position: 'absolute', zIndex: 20, right: -15 }} className="p-4 rounded-full"></View>
-                                </View>
-                                <View className="rounded-bl-[10px] rounded-br-[10px] bg-white p-4 text-center">
-                                    <View className="flex gap-y-4">
-                                        <View className="flex flex-row justify-between items-center">
-                                            <CustomText style={{ color: '#000000' }}>Số lượt sử dụng:</CustomText>
-                                            <View style={{ width: '55%', position: 'relative' }}>
-                                                <CustomTextInput defaultValue="0" style={{ borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 5, textAlign: 'center' }} keyboardType="numeric" />
-                                                <View className="w-10 h-full absolute top-0 right-0 flex items-center">
-                                                    <TouchableOpacity className="h-1/2 pt-[10px]">
-                                                        <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]">
-                                                        <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </View>
-                                        <View className="flex flex-row justify-between items-center">
-                                            <CustomText style={{ color: '#000000' }}>Số người đi cùng:</CustomText>
-                                            <View style={{ width: '55%', position: 'relative' }}>
-                                                <CustomTextInput defaultValue="0" style={{ borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 5, textAlign: 'center' }} keyboardType="numeric" />
-                                                <View className="w-10 h-full absolute top-0 right-0 flex items-center">
-                                                    <TouchableOpacity className="h-1/2 pt-[10px]" onPress={() => console.log('up')}>
-                                                        <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]" onPress={() => console.log('down')}>
-                                                        <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
+                                    {showUserCard && <TableUserInfor />}
                                 </View>
                             </View>
-                        </View>
-                        <View className="px-4 flex flex-row justify-center gap-x-[18px] mb-5">
-                            <TouchableOpacity className="flex-1">
-                                <CustomText style={{ backgroundColor: CustomColors.sercond, borderRadius: 10 }} className="py-4 text-black text-sm w-full text-center">Trở lại</CustomText>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="flex-1">
-                                <CustomText style={{ backgroundColor: CustomColors.primary, borderRadius: 10 }} className="py-4 text-white text-sm w-full text-center">Tiếp tục</CustomText>
-                            </TouchableOpacity>
-                        </View>
+                        </KeyboardAvoidingView>
+                        <Button onPressContinue={handleSubmit(onSubmit)} />
                     </View>
                 </ScrollView>
-            </KeyboardAvoidingView>
+            </View >
         </View >
     )
 }

@@ -17,7 +17,7 @@ const notifiSlice = createSlice({
             state.type = 'loading';
         },
         ShowModal(state, action) {
-            console.log('payload', action.payload.message)
+            // console.log('payload', action.payload.message)
             state.type = 'modal';
             state.message = action.payload.message;
             state.button = action.payload?.button || false;

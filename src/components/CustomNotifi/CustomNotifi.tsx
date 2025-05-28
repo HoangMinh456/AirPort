@@ -4,7 +4,7 @@ import NotifiModal from "./NotifiModal";
 
 export default function CustomNotifi() {
     const notifiType = useSelector((state: any) => state.notifi.type);
-    console.log('notifiType của CustomNofifi: ', notifiType);
+    // console.log('notifiType của CustomNofifi: ', notifiType);
 
     if (notifiType === 'hidden') { return null; }
 

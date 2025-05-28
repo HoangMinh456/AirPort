@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 export default function NotifiLoading() {
     const notifiType = useSelector((state: any) => state.notifi.type);
-    console.log('notifiType: ', notifiType);
+    // console.log('notifiType: ', notifiType);
     if (notifiType === 'hidden') { return null; }
 
     return (

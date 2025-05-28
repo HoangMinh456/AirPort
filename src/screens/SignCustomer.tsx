@@ -12,6 +12,15 @@ const { width, height } = Dimensions.get('window');
 export default function SignCustomer() {
     const [isChecked, setIsChecked] = useState<boolean>(false)
     const { modal } = useNotifi();
+
+    const onSubmit = () => {
+        if (isChecked === true) {
+            modal({ title: 'Đăng ký thành công!' });
+        } else {
+            modal({ title: 'Thông báo', message: 'Vui lòng đồng ý với điều khoản và dịch vụ' })
+        }
+    }
+
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
             <View className="flex justify-between h-full gap-y-5">
@@ -25,7 +34,7 @@ export default function SignCustomer() {
                         <CustomText style={{ color: '#000', fontWeight: 400, fontSize: 13, paddingTop: 16, textAlign: 'center' }}>Quý khách vui lòng ký xác nhận sử dụng dịch vụ:</CustomText>
                     </View>
                 </View>
-                <Button onPressContinue={() => modal({ title: 'Đăng ký thành công' })} />
+                <Button onPressContinue={() => onSubmit()} />
             </View>
         </View>
     )

@@ -5,14 +5,14 @@ import Icons from "./Icons";
 import { useNavigation } from "@react-navigation/native";
 
 
-export default function HeaderNavigation({ title }: { title: string }) {
+export default function HeaderNavigation({ title, goBack = true }: { title: string, goBack?: boolean }) {
     const navigation = useNavigation();
     return (
         <View style={{ backgroundColor: CustomColors.primary, paddingHorizontal: 16, paddingVertical: 28 }}>
             <View className="flex flex-row gap-x-4 items-center">
-                <TouchableOpacity onPress={() => navigation.goBack()}>
+                {goBack && <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icons typeIcon="MaterialIcons" nameIcon="arrow-back-ios-new" sizeIcon={18} colorIcon="#fff" />
-                </TouchableOpacity>
+                </TouchableOpacity>}
                 <CustomText className="text-lg font-bold text-white">{title}</CustomText>
             </View>
         </View>
