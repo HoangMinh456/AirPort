@@ -23,7 +23,8 @@ export default function UserNavigator() {
                 backgroundColor={CustomColors.primary}
             />
             {/* <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} /> */}
-            <Stack.Navigator initialRouteName="EnterEcode">
+            <Stack.Navigator initialRouteName="Test">
+                <Stack.Screen name="Test" component={Test} options={{ headerShown: false }} />
                 <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
                 <Stack.Screen name="SnapShootTicket" component={SnapShootTicket} options={{ headerShown: false }} />
                 <Stack.Screen name="SignCustomer" component={SignCustomer} options={{ headerShown: false }} />
