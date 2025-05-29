@@ -53,7 +53,7 @@ export default function HomeScreen({ navigation }: any) {
                     )}
                 />
             </View>
-            <View style={styles.container2}>
+            {/* <View style={styles.container2}>
                 <View className="flex items-center">
                     <Icons typeIcon="Entypo" nameIcon="home" sizeIcon={26} colorIcon="#000000" />
                     <CustomText className="text-sm">Trang chủ</CustomText>
@@ -68,7 +68,7 @@ export default function HomeScreen({ navigation }: any) {
                         <CustomText className="text-sm">Cá nhân</CustomText>
                     </View>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </>
     )
 }
