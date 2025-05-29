@@ -5,6 +5,7 @@ import HistoryScreen from "./HistoryScreen";
 import Icons from "../components/Icons";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
+import UserInfor from "./UserInforScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ export default function MainTabs() {
                     if (route.name === 'History') {
                         return <Icons typeIcon="MaterialCommunityIcons" nameIcon="history" sizeIcon={26} colorIcon={focused ? CustomColors.primary : '#000000'} />
                     }
-                    if (route.name === 'User') {
+                    if (route.name === 'UserInfor') {
                         return <Icons typeIcon="FontAwesome6" nameIcon="user-large" sizeIcon={26} colorIcon={focused ? CustomColors.primary : '#000000'} />
                     }
                 },
@@ -36,7 +37,7 @@ export default function MainTabs() {
                     if (route.name === 'History') {
                         return <CustomText style={{ color, fontWeight: focused ? '700' : '400', fontSize: 14, marginTop: -20 }}>Lịch sử</CustomText>
                     }
-                    if (route.name === 'User') {
+                    if (route.name === 'UserInfor') {
                         return <CustomText style={{ color, fontWeight: focused ? '700' : '400', fontSize: 14, marginTop: -20 }}>Cá nhân</CustomText>
                     }
                 },
@@ -55,7 +56,8 @@ export default function MainTabs() {
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Tab.Screen name="History" component={HistoryScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="User" component={User} options={{ headerShown: false }} />
+            <Tab.Screen name="UserInfor" component={UserInfor} options={{ headerShown: false }} />
+            {/* <Tab.Screen name="User" component={User} options={{ headerShown: false }} /> */}
         </Tab.Navigator>
     )
 }

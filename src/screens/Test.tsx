@@ -1,29 +1,41 @@
+import { useNavigation } from "@react-navigation/native";
 import { useRef } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { RNCamera } from "react-native-camera";
 
 export default function Test() {
+    const navigation = useNavigation();
     const cameraRef = useRef(null)
+
+    const handleBarCordRead = ({ data, type }) => {
+        console.log('QR code data: ', data)
+        console.log('QR code type: ', type)
+        if (data !== undefined && type !== undefined) {
+            navigation.goBack();
+        }
+    }
+
     return (
         <RNCamera
             ref={cameraRef}
             style={styles.preview}
             type={RNCamera.Constants.Type.back}
             flashMode={RNCamera.Constants.FlashMode.off}
+            captureAudio={false}
+            onBarCodeRead={handleBarCordRead}
             androidCameraPermissionOptions={{
                 title: 'Quyền truy cập camera',
                 message: 'App cần quyền truy cập camera',
                 buttonPositive: 'Đồng ý',
                 buttonNegative: 'Từ chối'
             }}
+            barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
         >
             {({ status }) => {
                 if (status !== 'READY') return <Text>...Đang tải camera</Text>
                 return (
-                    <View style={styles.captureContainer}>
-                        <TouchableOpacity onPress={() => console.log('press camera')} style={styles.capture}>
-                            <Text style={{ fontSize: 14 }}> CHỤP ẢNH </Text>
-                        </TouchableOpacity>
+                    <View style={styles.overlay}>
+                        <Text style={styles.scanText}>Quét mã QR...</Text>
                     </View>
                 )
             }}
@@ -39,21 +51,21 @@ const styles = StyleSheet.create({
     },
     preview: {
         flex: 1,
+        // backgroundColor: '#00000050',
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
-    captureContainer: {
-        flex: 0,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginBottom: 20,
+    overlay: {
+        position: 'absolute',
+        top: 50,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
     },
-    capture: {
-        flex: 0,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        padding: 15,
-        paddingHorizontal: 20,
-        alignSelf: 'center',
+    scanText: {
+        fontSize: 18,
+        color: 'white',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        padding: 10,
     },
 })

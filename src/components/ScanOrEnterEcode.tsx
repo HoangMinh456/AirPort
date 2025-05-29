@@ -4,8 +4,10 @@ import CustomText from "./CustomText";
 import CustomTextInput from "./CustomTextInput";
 import Icons from "./Icons";
 import { Controller } from "react-hook-form";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ScanOrEnterEcode({ control, errors }: any) {
+    const navigation = useNavigation();
 
     return (
         <View style={{ flexGrow: 1, paddingTop: 30, paddingHorizontal: 16, display: 'flex', rowGap: 16 }} className="grow">
@@ -31,7 +33,7 @@ export default function ScanOrEnterEcode({ control, errors }: any) {
                             />
                         )}
                     />
-                    <TouchableOpacity onPress={() => console.log('')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Test')}>
                         <View style={{ borderColor: '#C1C8D1', borderWidth: 1, padding: 8, backgroundColor: '#fff', borderRadius: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Icons typeIcon="MaterialCommunityIcons" nameIcon="line-scan" colorIcon={CustomColors.primary} sizeIcon={30} />
                         </View>
