@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useRef } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { RNCamera } from "react-native-camera";
 
 export default function Test() {

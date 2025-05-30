@@ -1,11 +1,10 @@
-import CheckBox from "@react-native-community/checkbox";
 import { Controller, useForm } from "react-hook-form";
 import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
+import AgreePolicy from "../components/AgreePolicy";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
-import AgreePolicy from "../components/AgreePolicy";
 
 const { width, height } = Dimensions.get('window');
 

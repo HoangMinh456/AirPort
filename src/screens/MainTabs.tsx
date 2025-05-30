@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
-import User from "./User";
+import User from "./NumberCardScreen";
 import HistoryScreen from "./HistoryScreen";
 import Icons from "../components/Icons";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
-import UserInfor from "./UserInforScreen";
+import UserInforScreen from "./UserInforScreen";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,21 +44,24 @@ export default function MainTabs() {
                 },
 
                 tabBarStyle: {
-                    borderTopLeftRadius: 20,
-                    borderTopRightRadius: 20,
-                    backgroundColor: '#ffffff',
-                    elevation: 20,
+                    backgroundColor: CustomColors.backgroundColor,
                     height: 80,
                     display: 'flex',
                     alignItems: 'center',
-                    paddingBottom: 12
-                }
+                    paddingBottom: 12,
+                    elevation: 24,
+                },
+
+                tabBarBackground: () => (
+                    <View style={{
+                        backgroundColor: '#fff', flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, elevation: 24,
+                    }} />
+                )
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Tab.Screen name="History" component={HistoryScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="UserInfor" component={UserInfor} options={{ headerShown: false }} />
-            {/* <Tab.Screen name="User" component={User} options={{ headerShown: false }} /> */}
+            <Tab.Screen name="UserInfor" component={UserInforScreen} options={{ headerShown: false }} />
         </Tab.Navigator>
     )
 }

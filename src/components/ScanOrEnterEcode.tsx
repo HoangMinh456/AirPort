@@ -10,7 +10,7 @@ export default function ScanOrEnterEcode({ control, errors }: any) {
     const navigation = useNavigation();
 
     return (
-        <View style={{ flexGrow: 1, paddingTop: 30, paddingHorizontal: 16, display: 'flex', rowGap: 16 }} className="grow">
+        <View style={{ flexGrow: 1, paddingTop: 30, paddingHorizontal: 16, display: 'flex', rowGap: 16 }}>
             <CustomText style={{ fontSize: 16, color: CustomColors.black }}>
                 Nhập mã Ecode của khách hàng bằng tay hoặc quét mã QR Code
             </CustomText>
@@ -27,6 +27,7 @@ export default function ScanOrEnterEcode({ control, errors }: any) {
                             <CustomTextInput
                                 value={value}
                                 onChangeText={onChange}
+                                keyboardType="numeric"
                                 placeholder="Nhập E Code"
                                 placeholderTextColor="#737373"
                                 style={{ paddingLeft: 24, borderWidth: 1, height: 50, borderColor: errors.eCode ? CustomColors.primary : '#C1C8D1', borderRadius: 10, backgroundColor: '#fff', flex: 1 }}

@@ -1,9 +1,9 @@
 import { StyleSheet, TextInput } from "react-native"
 
 const CustomTextInput =
-    ({ style, placeholder, placeholderTextColor, onChangeText, value, errorStyle, keyboardType, className, defaultValue }
+    ({ style, placeholder, placeholderTextColor, onChangeText, value, errorStyle, keyboardType, className, defaultValue, editable }
         :
-        { style?: any, className?: any, placeholder?: string, placeholderTextColor?: string, onChangeText?: any, value?: any, errorStyle?: any, keyboardType?: any, defaultValue?: string }
+        { style?: any, className?: any, placeholder?: string, placeholderTextColor?: string, onChangeText?: any, value?: any, errorStyle?: any, keyboardType?: any, defaultValue?: string, editable?: boolean }
     ) => {
         // console.log('errorStyle: ', errorStyle);
         return (
@@ -15,7 +15,8 @@ const CustomTextInput =
                 defaultValue={defaultValue}
                 placeholder={placeholder}
                 placeholderTextColor={placeholderTextColor}
-                style={[style, styles.fontDefault, errorStyle]}
+                style={[styles.fontDefault, style, errorStyle]}
+                editable={editable}
             />
         );
     };
@@ -23,6 +24,7 @@ const CustomTextInput =
 const styles = StyleSheet.create({
     fontDefault: {
         fontFamily: 'Inter-VariableFont_opsz,wght',
+        color: '#000000'
     },
 });
 

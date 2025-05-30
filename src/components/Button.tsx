@@ -3,15 +3,15 @@ import CustomText from "./CustomText";
 import CustomColors from "../../colors";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Button({ onPressContinue, swichCase, setSwitchCase }: { onPressContinue?: () => void, swichCase?: string, setSwitchCase?: any }) {
+export default function Button({ onPressContinue, onPressBack, swichCase, setSwitchCase, titleButtonBack = 'Trở lại', titleButtonContinue = 'Tiếp tục', styleButtonBack, styleButtonContinue }: { onPressContinue?: () => void, onPressBack?: () => void, swichCase?: string, setSwitchCase?: any, titleButtonBack?: string, titleButtonContinue?: string, styleButtonBack?: any, styleButtonContinue?: any }) {
     const navigation = useNavigation();
     return (
         <View className="px-4 flex flex-row justify-center gap-x-[18px] py-5">
-            <TouchableOpacity className="flex-1" onPress={() => swichCase === 'OWNER_INFOR' ? setSwitchCase('ENTER_ECODE') : navigation.goBack()}>
-                <CustomText style={{ backgroundColor: CustomColors.sercond, borderRadius: 10 }} className="py-4 text-black text-sm w-full text-center">Trở lại</CustomText>
+            <TouchableOpacity className="flex-1" onPress={onPressBack || (() => swichCase === 'OWNER_INFOR' ? setSwitchCase('ENTER_ECODE') : navigation.goBack())}>
+                <CustomText style={[{ backgroundColor: CustomColors.sercond, borderRadius: 10, paddingVertical: 16, fontSize: 14, textAlign: 'center', color: '#000000' }, styleButtonBack]} >{titleButtonBack}</CustomText>
             </TouchableOpacity>
             <TouchableOpacity className="flex-1" onPress={onPressContinue || (() => console.log('press'))}>
-                <CustomText style={{ backgroundColor: CustomColors.primary, borderRadius: 10 }} className="py-4 text-white text-sm w-full text-center">Tiếp tục</CustomText>
+                <CustomText style={[{ backgroundColor: CustomColors.primary, borderRadius: 10, paddingVertical: 16, fontSize: 14, textAlign: 'center', color: '#fff' }, styleButtonContinue]} >{titleButtonContinue}</CustomText>
             </TouchableOpacity>
         </View>
     );

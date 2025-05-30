@@ -1,8 +1,8 @@
-import { Touchable, TouchableOpacity, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { TouchableOpacity, View } from "react-native";
 import CustomColors from "../../colors";
 import CustomText from "./CustomText";
 import Icons from "./Icons";
-import { useNavigation } from "@react-navigation/native";
 
 
 export default function HeaderNavigation({ title, goBack = true }: { title: string, goBack?: boolean }) {

@@ -1,10 +1,26 @@
-import { TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Platform, TouchableOpacity, View } from "react-native";
 import Icons from "./Icons";
 import CustomText from "./CustomText";
 import CustomColors from "../../colors";
 import CustomTextInput from "./CustomTextInput";
+import { Controller, useForm } from "react-hook-form";
+import useNotifi from "../hooks/useNotifi";
+import { useEffect } from "react";
 
-export default function TableUserInfor() {
+export default function TableUserInfor({ control, errors }: any) {
+    // const { control, handleSubmit, formState: { errors } } = useForm()
+    const { modal } = useNotifi();
+
+    useEffect(() => {
+        if (errors.used) {
+            modal({ title: 'Thông báo', message: errors.used.message })
+        }
+
+        if (errors.followWith) {
+            modal({ title: 'Thông báo', message: errors.followWith.message })
+        }
+    }, [errors])
+
     return (
         <View className="flex px-4">
             <View style={{ display: 'flex', rowGap: 14 }} className="rounded-tl-[10px] rounded-tr-[10px] bg-white p-4">
@@ -52,36 +68,68 @@ export default function TableUserInfor() {
                 <View style={{ backgroundColor: '#E6E6E6', borderRadius: 9999, position: 'absolute', zIndex: 20, right: -15 }} className="p-4 rounded-full"></View>
             </View>
             <View className="rounded-bl-[10px] rounded-br-[10px] bg-white p-4 text-center">
+                {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}> */}
                 <View className="flex gap-y-4">
                     <View className="flex flex-row justify-between items-center">
                         <CustomText style={{ color: '#000000' }}>Số lượt sử dụng:</CustomText>
-                        <View style={{ width: '55%', position: 'relative' }}>
-                            <CustomTextInput defaultValue="0" style={{ borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 5, textAlign: 'center' }} keyboardType="numeric" />
-                            <View className="w-10 h-full absolute top-0 right-0 flex items-center">
-                                <TouchableOpacity className="h-1/2 pt-[10px]">
-                                    <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]">
-                                    <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        <Controller
+                            control={control}
+                            name="used"
+                            rules={{
+                                validate: (value) => Number(value) >= 0
+                            }}
+                            render={({ field: { value, onChange } }) => (
+                                <View style={{ width: '55%', position: 'relative' }}>
+                                    <CustomTextInput
+                                        style={{ borderWidth: 1, borderColor: errors.used ? CustomColors.primary : '#DDDDDD', borderRadius: 5, textAlign: 'center' }}
+                                        keyboardType="numeric"
+                                        value={value}
+                                        editable={false}
+                                        onChangeText={onChange}
+                                    />
+                                    <View className="w-10 h-full absolute top-0 right-0 flex items-center">
+                                        <TouchableOpacity className="h-1/2 pt-[10px]" onPress={() => onChange((Number(value) + 1).toString())}>
+                                            <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]" onPress={() => (Number(value) > 0) && onChange((Number(value) - 1).toString())}>
+                                            <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )}
+                        />
                     </View>
                     <View className="flex flex-row justify-between items-center">
                         <CustomText style={{ color: '#000000' }}>Số người đi cùng:</CustomText>
-                        <View style={{ width: '55%', position: 'relative' }}>
-                            <CustomTextInput defaultValue="0" style={{ borderWidth: 1, borderColor: '#DDDDDD', borderRadius: 5, textAlign: 'center' }} keyboardType="numeric" />
-                            <View className="w-10 h-full absolute top-0 right-0 flex items-center">
-                                <TouchableOpacity className="h-1/2 pt-[10px]" onPress={() => console.log('up')}>
-                                    <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]" onPress={() => console.log('down')}>
-                                    <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        <Controller
+                            control={control}
+                            name="followWith"
+                            rules={{
+                                validate: (value) => Number(value) >= 0
+                            }}
+                            render={({ field: { value, onChange } }) => (
+                                <View style={{ width: '55%', position: 'relative' }}>
+                                    <CustomTextInput
+                                        style={{ borderWidth: 1, borderColor: errors.followWith ? CustomColors.primary : '#DDDDDD', borderRadius: 5, textAlign: 'center' }}
+                                        keyboardType="numeric"
+                                        value={value}
+                                        editable={false}
+                                        onChangeText={onChange}
+                                    />
+                                    <View className="w-10 h-full absolute top-0 right-0 flex items-center">
+                                        <TouchableOpacity className="h-1/2 pt-[10px]" onPress={() => onChange((Number(value) + 1).toString())}>
+                                            <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ transform: [{ rotate: '180deg' }] }} className="h-1/2 pt-[10px]" onPress={() => (Number(value) > 0) && onChange((Number(value) - 1).toString())}>
+                                            <Icons typeIcon="MaterialIcons" nameIcon="arrow-drop-up" colorIcon="#666666" sizeIcon={24} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            )}
+                        />
                     </View>
                 </View>
+                {/* </KeyboardAvoidingView> */}
             </View>
         </View>
     )
