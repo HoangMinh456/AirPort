@@ -8,13 +8,18 @@ const ticketPicture = createSlice({
         signature: '',
     },
     reducers: {
-        saveTicket(state, action) {
-            if (action.payload.type === 'myTicketPicture') {
-                state.myTicketPicture = action.payload.uri;
+        saveTicket(
+            state,
+            action: {
+                payload: {
+                    type: string;
+                    saveTo: 'myTicketPicture' | 'otherTicketPicture';
+                    uri: string;
+                };
             }
-
-            if (action.payload.type === 'otherTicketPicture') {
-                state.otherTicketPicture = action.payload.uri;
+        ) {
+            if (action.payload.type === 'camera' && ['myTicketPicture', 'otherTicketPicture'].includes(action.payload.saveTo)) {
+                state[action.payload.saveTo] = action.payload.uri;
             }
         },
         saveSignature(state, action) {

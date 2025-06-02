@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ScanOrEnterEcode({ control, errors }: any) {
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
 
     return (
         <View style={{ flexGrow: 1, paddingTop: 30, paddingHorizontal: 16, display: 'flex', rowGap: 16 }}>
@@ -34,13 +34,13 @@ export default function ScanOrEnterEcode({ control, errors }: any) {
                             />
                         )}
                     />
-                    <TouchableOpacity onPress={() => navigation.navigate('Test')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'qr' })}>
                         <View style={{ borderColor: '#C1C8D1', borderWidth: 1, padding: 8, backgroundColor: '#fff', borderRadius: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Icons typeIcon="MaterialCommunityIcons" nameIcon="line-scan" colorIcon={CustomColors.primary} sizeIcon={30} />
                         </View>
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </View >
     )
 }

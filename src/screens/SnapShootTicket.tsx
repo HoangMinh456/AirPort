@@ -30,7 +30,7 @@ export default function SnapShootTicket({ navigation }: any) {
                 <HeaderNavigation title="Chụp ảnh vé máy bay" />
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
                     <View style={{ paddingTop: 30, paddingHorizontal: 16, display: 'flex', flexGrow: 1, flex: 1, flexDirection: 'column', rowGap: 16 }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'myTicketPicture' })}>
+                        <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', saveTo: 'myTicketPicture' })}>
                             <LinearGradient colors={['#FFFFFF', '#D5D5D5']} style={{ display: 'flex', borderWidth: 1, padding: 16, borderRadius: 10, alignItems: 'center', borderColor: '#C1C8D1' }}>
                                 <View className="flex flex-row justify-between items-center">
                                     <Icons typeIcon="Entypo" nameIcon="camera" colorIcon="#C1C8D1" sizeIcon={30} />
@@ -39,7 +39,7 @@ export default function SnapShootTicket({ navigation }: any) {
                             </LinearGradient>
                         </TouchableOpacity>
                         {myTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: myTicketPicture }} resizeMode="cover" />}
-                        <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'otherTicketPicture' })}>
+                        <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', saveTo: 'otherTicketPicture' })}>
                             <LinearGradient colors={['#FFFFFF', '#D5D5D5']} style={{ display: 'flex', borderWidth: 1, padding: 16, borderRadius: 10, alignItems: 'center', borderColor: '#C1C8D1' }}>
                                 <View className="flex flex-row justify-between items-center">
                                     <Icons typeIcon="Entypo" nameIcon="camera" colorIcon="#C1C8D1" sizeIcon={30} />
