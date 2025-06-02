@@ -6,11 +6,13 @@ import HeaderNavigation from "../components/HeaderNavigation";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import Button from "../components/Button";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get('window');
 
 export default function EditPasswordScreen() {
-    const { control, handleSubmit, formState: { errors }, reset } = useForm()
+    const navigation = useNavigation<any>()
+    const { control, handleSubmit, formState: { errors }, reset, getValues } = useForm()
     const { modal } = useNotifi();
 
     const onSubmit = (data: any) => {
@@ -78,7 +80,12 @@ export default function EditPasswordScreen() {
                     <Controller
                         control={control}
                         name="re_newPassword"
-                        rules={{ required: true }}
+                        rules={{
+                            required: true,
+                            validate: (value) => (
+                                value === getValues('newPassword') || 'Mật khẩu mới không trùng khớp'
+                            )
+                        }}
                         render={({ field: { value, onChange } }) => (
                             <View style={{ display: 'flex', rowGap: 8 }}>
                                 <CustomText style={{ paddingLeft: 10, fontSize: 14, fontWeight: '600', color: errors.re_newPassword ? CustomColors.primary : CustomColors.black }}>Nhập lại mật khẩu mới</CustomText>
@@ -100,7 +107,7 @@ export default function EditPasswordScreen() {
                             </View>
                         )}
                     />
-                    <Button onPressBack={() => reset()} titleButtonBack="Hủy" styleButtonBack={{ fontWeight: '500' }} titleButtonContinue="Đổi mật khẩu" styleButtonContinue={{ fontWeight: '500' }} onPressContinue={handleSubmit(onSubmit)} />
+                    <Button onPressBack={() => { reset(), navigation.goBack() }} titleButtonBack="Hủy" styleButtonBack={{ fontWeight: '500' }} titleButtonContinue="Đổi mật khẩu" styleButtonContinue={{ fontWeight: '500' }} onPressContinue={handleSubmit(onSubmit)} />
                 </View>
             </View>
         </View>

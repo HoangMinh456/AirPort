@@ -6,10 +6,12 @@ import CustomText from "../components/CustomText";
 import HeaderNavigation from "../components/HeaderNavigation";
 import Icons from "../components/Icons";
 import ModalSupportPhone from "../components/ModalSupportPhone";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get('window');
 
 export default function UserInforScreen() {
+    const navigation = useNavigation<any>();
     const [modalVisible, setModalVisiable] = useState<boolean>(false);
 
     return (
@@ -33,27 +35,33 @@ export default function UserInforScreen() {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
-                        <Icons typeIcon="FontAwesome6" nameIcon="user-large" colorIcon={CustomColors.primary} sizeIcon={27} />
-                        <View style={{ display: 'flex', rowGap: 4 }}>
-                            <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Sửa thông tin</CustomText>
-                            <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Cập nhật thông tin cá nhân</CustomText>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditUserInforScreen')}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
+                            <Icons typeIcon="FontAwesome6" nameIcon="user-large" colorIcon={CustomColors.primary} sizeIcon={27} />
+                            <View style={{ display: 'flex', rowGap: 4 }}>
+                                <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Sửa thông tin</CustomText>
+                                <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Cập nhật thông tin cá nhân</CustomText>
+                            </View>
                         </View>
-                    </View>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
-                        <Icons typeIcon="MaterialCommunityIcons" nameIcon="key" colorIcon={CustomColors.primary} sizeIcon={27} />
-                        <View style={{ display: 'flex', rowGap: 4 }}>
-                            <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Đổi mật khẩu</CustomText>
-                            <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Đảm bảo an toàn tài khoản</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('EditPasswordScreen')}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
+                            <Icons typeIcon="MaterialCommunityIcons" nameIcon="key" colorIcon={CustomColors.primary} sizeIcon={27} />
+                            <View style={{ display: 'flex', rowGap: 4 }}>
+                                <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Đổi mật khẩu</CustomText>
+                                <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Đảm bảo an toàn tài khoản</CustomText>
+                            </View>
                         </View>
-                    </View>
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
-                        <Icons typeIcon="MaterialCommunityIcons" nameIcon="login-variant" colorIcon={CustomColors.primary} sizeIcon={27} />
-                        <View style={{ display: 'flex', rowGap: 4 }}>
-                            <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Đăng xuất</CustomText>
-                            <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Thoát khỏi tài khoản</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => console.log()}>
+                        <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
+                            <Icons typeIcon="MaterialCommunityIcons" nameIcon="login-variant" colorIcon={CustomColors.primary} sizeIcon={27} />
+                            <View style={{ display: 'flex', rowGap: 4 }}>
+                                <CustomText style={{ color: '#000000', fontSize: 15, fontWeight: '700' }}>Đăng xuất</CustomText>
+                                <CustomText style={{ color: '#000000', fontSize: 13, fontWeight: '300' }}>Thoát khỏi tài khoản</CustomText>
+                            </View>
                         </View>
-                    </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <ModalSupportPhone modalVisible={modalVisible} setModalVisiable={setModalVisiable} />

@@ -6,10 +6,12 @@ import CustomText from "../components/CustomText"
 import Button from "../components/Button"
 import { Controller, useForm } from "react-hook-form"
 import useNotifi from "../hooks/useNotifi"
+import { useNavigation } from "@react-navigation/native"
 
 const { width, height } = Dimensions.get('window')
 
 export default function EditUserInforScreen() {
+    const navigation = useNavigation<any>();
     const { control, handleSubmit, formState: { errors }, reset } = useForm()
     const { modal } = useNotifi();
 
@@ -100,7 +102,7 @@ export default function EditUserInforScreen() {
                             </View>
                         )}
                     />
-                    <Button onPressBack={() => reset()} titleButtonBack="Hủy" styleButtonBack={{ fontWeight: '500' }} titleButtonContinue="Cập nhật" styleButtonContinue={{ fontWeight: '500' }} onPressContinue={handleSubmit(onSubmit)} />
+                    <Button onPressBack={() => { reset(), navigation.goBack() }} titleButtonBack="Hủy" styleButtonBack={{ fontWeight: '500' }} titleButtonContinue="Cập nhật" styleButtonContinue={{ fontWeight: '500' }} onPressContinue={handleSubmit(onSubmit)} />
                 </View>
             </View>
         </View>
