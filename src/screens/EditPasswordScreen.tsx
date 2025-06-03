@@ -16,7 +16,10 @@ export default function EditPasswordScreen() {
     const { modal } = useNotifi();
 
     const onSubmit = (data: any) => {
-        console.log('data: ', data)
+        if (data.oldPassword !== '123123') {
+            modal({ title: 'Thông báo', message: 'Mật khẩu cũ không chính xác' })
+            return;
+        }
         modal({ title: 'Thông báo', message: 'Cập nhật thành công' })
     }
 

@@ -20,7 +20,7 @@ export default function SnapShootTicket({ navigation }: any) {
         if (myTicketPicture !== '') {
             navigation.navigate('SignCustomer');
         } else {
-            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh thẻ máy bay!' })
+            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh vé máy bay!' })
         }
     }
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Dimensions, View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import CustomColors from "../../colors";
 import Button from "../components/Button";
 import EnterOwnerInfor from "../components/EnterOwnerInfor";
@@ -11,7 +11,12 @@ import useNotifi from "../hooks/useNotifi";
 const { width, height } = Dimensions.get('window');
 
 export default function EnterEcodeScreen({ navigation }: any) {
-    const { control, handleSubmit, formState: { errors } } = useForm()
+    const { control, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            used: '0',
+            followWith: '0'
+        },
+    })
     const [swichCase, setSwitchCase] = useState<string>('ENTER_ECODE');
     const { modal } = useNotifi();
 
@@ -20,24 +25,30 @@ export default function EnterEcodeScreen({ navigation }: any) {
 
     const onSubmit = (data: any) => {
         console.log('data: ', data)
+
+        if (checkInfor === true) {
+            console.log('Chạy vào đây')
+            navigation.navigate('SnapShootTicket');
+        }
+
         if (swichCase === 'ENTER_ECODE') {
             if (data.eCode === '24042004') {
                 setSwitchCase('OWNER_INFOR');
+                return;
             } else {
                 modal({ title: 'Thông báo', message: 'E Code không tồn tại' })
+                return;
             }
         }
 
         if (swichCase === 'OWNER_INFOR') {
             if (data.name === 'HoangMinh' && data.card === '123456') {
                 setCheckInfor(true);
+                return;
             } else {
                 modal({ title: 'Thông báo', message: 'Thông tin khách hàng không tồn tại!' })
+                return;
             }
-        }
-
-        if (checkInfor === true) {
-            navigation.navigate('SnapShootTicket');
         }
     }
 
@@ -56,10 +67,14 @@ export default function EnterEcodeScreen({ navigation }: any) {
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
-            <View className="flex justify-between h-full">
+            <View className="flex justify-between flex-1">
                 <HeaderNavigation title="Nhập mã Ecode" />
-                {switchBody()}
-                <Button swichCase={swichCase} setSwitchCase={setSwitchCase} onPressContinue={handleSubmit(onSubmit)} />
+                <ScrollView contentContainerStyle={{ height: (checkInfor !== true) ? '100%' : 'auto' }}>
+                    <View style={{ display: 'flex', flex: 1, height: '100%', justifyContent: 'space-between' }}>
+                        {switchBody()}
+                        <Button swichCase={swichCase} setSwitchCase={setSwitchCase} onPressContinue={handleSubmit(onSubmit)} />
+                    </View>
+                </ScrollView>
             </View>
         </View>
     )

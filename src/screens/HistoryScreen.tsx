@@ -1,4 +1,4 @@
-import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import HeaderNavigation from "../components/HeaderNavigation";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
@@ -8,12 +8,47 @@ import { useState } from "react";
 
 const { width, height } = Dimensions.get('window')
 
+const fakeData = [
+    {
+        id: '1',
+        roomName: 'Thương gia sông hồng',
+        nameCustomer: 'Nguyễn Vân Anh',
+        used: 1,
+        followWith: 2,
+        date: new Date('2025-08-31T15:10:00')
+    },
+    {
+        id: '2',
+        roomName: 'Thương gia sông hồng',
+        nameCustomer: 'Hoàng Minh',
+        used: 1,
+        followWith: 1,
+        date: new Date('2025-07-15T15:00:00')
+    }
+]
+
 export default function HistoryScreen() {
     const [openFromDate, setOpenFromDate] = useState<boolean>(false);
     const [fromDate, setFromDate] = useState<Date | null>(null);
 
     const [openToDate, setOpenToDate] = useState<boolean>(false);
     const [toDate, setToDate] = useState<Date | null>(null);
+
+    const filterDate = fakeData.filter((dateTime) => {
+        //Không chọn
+        if (!fromDate && !toDate) return true
+
+        //Chuyển date về 00:00:00 để dễ so sánh
+        const userDate = new Date(dateTime.date).setHours(0, 0, 0, 0);
+        const from = fromDate ? new Date(fromDate).setHours(0, 0, 0, 0) : null;
+        const to = toDate ? new Date(toDate).setHours(0, 0, 0, 0) : null;
+
+        if (from && to) return userDate >= from && userDate <= to;
+        if (from) return userDate >= from;
+        if (to) return userDate <= to;
+
+        return true;
+    })
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
@@ -83,9 +118,45 @@ export default function HistoryScreen() {
                     }}
                     onCancel={() => setOpenToDate(false)}
                 />
+                <ScrollView>
+                    <View style={{ flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20, rowGap: 10 }}>
+                        {
+                            fakeData?.length > 0
+                                ?
+                                filterDate.map((item: any) => {
+                                    return (
+                                        <View key={item.id} style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff' }}>
+                                            <View style={styles.containerViewTicket}>
+                                                <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>Phòng chờ</CustomText>
+                                                <CustomText style={{ flexGrow: 1, color: CustomColors.primary, fontSize: 15, fontWeight: '700', paddingLeft: 4 }}>{item.roomName}</CustomText>
+                                                <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>({item.used + item.followWith})</CustomText>
+                                            </View>
+                                            <View style={styles.containerViewTicket}>
+                                                <CustomText style={styles.label}>Họ và tên:</CustomText>
+                                                <CustomText style={styles.text}>{item.nameCustomer}</CustomText>
+                                            </View>
+                                            <View style={styles.containerViewTicket}>
+                                                <CustomText style={styles.label}>Thời gian sử dụng:</CustomText>
+                                                <CustomText style={styles.text}>{`${item.date.getHours()}:${item.date.getMinutes().toString().padStart(2, '0')} - ${item.date.getDate()}/${item.date.getMonth() + 1}/${item.date.getFullYear()}`}</CustomText>
+                                            </View>
+                                            <View style={styles.containerViewTicket}>
+                                                <CustomText style={styles.label}>Số lượt sử dụng:</CustomText>
+                                                <CustomText style={styles.text}>{item.used}</CustomText>
+                                            </View>
+                                            <View style={styles.containerViewTicket}>
+                                                <CustomText style={styles.label}>Số lượt khách đi kèm:</CustomText>
+                                                <CustomText style={styles.text}>{item.followWith}</CustomText>
+                                            </View>
+                                        </View>
+                                    )
+                                })
+                                :
+                                <View style={{ flexGrow: 1 }}>
+                                    <CustomText style={{ color: CustomColors.black, fontSize: 14, textAlign: 'center', marginTop: '20%' }}>Chưa có giao dịch nào</CustomText>
+                                </View>
+                        }
 
-                <View style={{ flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20, rowGap: 10 }}>
-                    <View style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff' }}>
+                        {/* <View style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff' }}>
                         <View style={styles.containerViewTicket}>
                             <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>Phòng chờ</CustomText>
                             <CustomText style={{ flexGrow: 1, color: CustomColors.primary, fontSize: 15, fontWeight: '700', paddingLeft: 4 }}>Thương gia sông hồng</CustomText>
@@ -130,8 +201,9 @@ export default function HistoryScreen() {
                             <CustomText style={styles.label}>Số lượt khách đi kèm:</CustomText>
                             <CustomText style={styles.text}>2</CustomText>
                         </View>
+                    </View> */}
                     </View>
-                </View>
+                </ScrollView>
             </View>
         </View>
     )

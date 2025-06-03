@@ -2,7 +2,7 @@ import { Dimensions, View } from "react-native"
 import HeaderNavigation from "../components/HeaderNavigation";
 import CustomColors from "../../colors";
 import AgreePolicy from "../components/AgreePolicy";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CustomText from "../components/CustomText";
 import Button from "../components/Button";
 import useNotifi from "../hooks/useNotifi";
@@ -10,32 +10,45 @@ import SignatureView from "react-native-signature-canvas";
 import { useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { saveSignature } from "../reducers/ticketPictureSclice";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get('window');
 
 export default function SignCustomer() {
+    const navigation = useNavigation<any>()
     const [isChecked, setIsChecked] = useState<boolean>(false)
     const { modal } = useNotifi();
     const dispatch = useAppDispatch();
     const signature = useSelector((state: any) => state.ticketPicture.signature);
-    console.log('signature: ', signature);
+    const signatureRef = useRef<any>(null)
+    // console.log('signature: ', signature);
 
     const onSubmit = () => {
         if (isChecked === true && signature !== '') {
             modal({ title: 'Đăng ký thành công!' });
+            navigation.navigate('History')
         }
         if (isChecked !== true) {
             modal({ title: 'Thông báo', message: 'Vui lòng đồng ý với điều khoản và dịch vụ' });
         }
         if (signature === '') {
-            modal({ title: 'Thông báo', message: 'Vui lòng ký xác nhận và nhấn "Lưu"' });
+            signatureRef.current?.readSignature();
+            modal({ title: 'Thông báo', message: 'Vui lòng ký xác nhận' });
+            return
         }
     }
 
+    //lưu chữ ký sau khi dừng bút
+    const handleEnd = () => {
+        if (signatureRef.current) {
+            signatureRef.current.readSignature();
+        }
+    };
+
     const handleOk = (signature: any) => {
-        console.log('Chú ký base64: ', signature)
+        // console.log('Chú ký base64: ', signature)
         dispatch(saveSignature(signature))
-        modal({ title: 'Thành công', message: 'Lưu chữ ký thành công!' })
+        // modal({ title: 'Thành công', message: 'Lưu chữ ký thành công!' })
     }
 
     return (
@@ -50,9 +63,11 @@ export default function SignCustomer() {
                     <View className="flex-1" style={{ backgroundColor: '#fff', borderRadius: 10, height: 'auto', overflow: "hidden" }}>
                         <CustomText style={{ color: '#000', fontWeight: 400, fontSize: 13, paddingVertical: 16, textAlign: 'center' }}>Quý khách vui lòng ký xác nhận sử dụng dịch vụ:</CustomText>
                         <SignatureView
+                            ref={signatureRef}
                             onOK={handleOk}
-                            clearText="Xóa"
-                            confirmText="Lưu"
+                            onEnd={handleEnd}
+                            clearText=""
+                            confirmText=""
                             autoClear={false}
                             descriptionText=""
                             webStyle={`
@@ -60,19 +75,14 @@ export default function SignCustomer() {
                                   box-shadow: none;
                                   border: none;
                                 }
-                          
+                              
                                 .m-signature-pad--footer {
-                                  display: flex;
-                                  justify-content: space-between;
-                                  border-radius: 0 0 10px 10px;
+                                  display: none !important;
                                 }
-                          
+                              
                                 canvas {
-                                  border-radius: 10px;
-                                }
-
-                                .button.clear{
-                                 background-color: #f44336;
+                                  border: none !important;
+                                  box-shadow: none !important;
                                 }
                             `}
                         />

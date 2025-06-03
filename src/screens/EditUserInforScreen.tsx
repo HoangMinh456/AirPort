@@ -12,7 +12,13 @@ const { width, height } = Dimensions.get('window')
 
 export default function EditUserInforScreen() {
     const navigation = useNavigation<any>();
-    const { control, handleSubmit, formState: { errors }, reset } = useForm()
+    const { control, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: {
+            name: 'Hoàng Minh',
+            phone: '08736554923',
+            email: 'minh@gmail.com'
+        }
+    })
     const { modal } = useNotifi();
 
     const onSubmit = (data: any) => {

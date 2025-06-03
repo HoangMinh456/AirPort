@@ -1,14 +1,12 @@
-import { TouchableOpacity, View } from "react-native";
-import CustomText from "./CustomText";
+import { Controller } from "react-hook-form";
+import { ScrollView, View } from "react-native";
 import CustomColors from "../../colors";
+import CustomText from "./CustomText";
 import CustomTextInput from "./CustomTextInput";
-import Icons from "./Icons";
-import { useState } from "react";
 import TableUserInfor from "./TableUserInfor";
-import { Controller, useForm } from "react-hook-form";
 
 export default function EnterOwnerInfor({ control, errors, checkInfor }: any) {
-
+    // console.log('control: ', control)
     return (
         <View style={{ flexGrow: 1, paddingTop: 30, paddingHorizontal: 16, display: 'flex', rowGap: 16 }}>
             <CustomText style={{ fontSize: 16, color: CustomColors.black }}>
@@ -48,7 +46,7 @@ export default function EnterOwnerInfor({ control, errors, checkInfor }: any) {
 
                 </View>
             </View>
-            {checkInfor && <TableUserInfor />}
+            {checkInfor && <TableUserInfor control={control} errors={errors} />}
         </View>
     )
 }

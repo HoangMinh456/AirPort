@@ -8,7 +8,6 @@ import useNotifi from "../hooks/useNotifi";
 import { useEffect } from "react";
 
 export default function TableUserInfor({ control, errors }: any) {
-    // const { control, handleSubmit, formState: { errors } } = useForm()
     const { modal } = useNotifi();
 
     useEffect(() => {
