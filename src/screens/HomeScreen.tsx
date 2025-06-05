@@ -28,8 +28,8 @@ export default function HomeScreen({ navigation }: any) {
                                 </TouchableOpacity>
                                 <ModalSupportPhone modalVisible={modalVisible} setModalVisiable={setModalVisiable} />
                             </View>
-                            <View className="BODY flex gap-y-8">
-                                <View className="flex gap-y-3 mt-8">
+                            <View className="BODY flex gap-y-8 py-8">
+                                <View className="flex gap-y-3">
                                     <CustomText className="text-lg font-bold text-black px-5">Nhận diện thẻ ngân hàng</CustomText>
                                     <View className="flex items-center px-3 w-full">
                                         <FlatList

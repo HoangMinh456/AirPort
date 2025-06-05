@@ -13,7 +13,7 @@ const notifiSlice = createSlice({
             state.type = 'hidden';
         },
         showLoading(state) {
-            console.log('state.type: loading');
+            // console.log('state.type: loading');
             state.type = 'loading';
         },
         ShowModal(state, action) {

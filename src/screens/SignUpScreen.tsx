@@ -1,20 +1,49 @@
 import { Controller, useForm } from "react-hook-form";
-import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
 import AgreePolicy from "../components/AgreePolicy";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
+import { sendOTP } from "../reducers/authSlice";
+import { useAppDispatch } from "../store/store";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import useNotifi from "../hooks/useNotifi";
 
 const { width, height } = Dimensions.get('window');
 
 export default function SignUpScreen({ navigation }: any) {
     const { control, handleSubmit, formState: { errors }, watch } = useForm();
+    const authStatus = useSelector((state: any) => state.auth.status);
+    const authError = useSelector((state: any) => state.auth.error);
+    const dispatch = useAppDispatch();
+    const { hidden, loading } = useNotifi()
+    const [userEmail, setUserEmail] = useState<string>('');
     // const [isChecked, setIsChecked] = useState(false);
     const policyChecked = watch('policy');
+
     const onSubmit = (data: any) => {
         console.log(data);
-        navigation.navigate('EnterPin');
+        setUserEmail(data.email);
+        dispatch(sendOTP(data.email));
+    }
+
+    useEffect(() => {
+        if (authStatus && authStatus === 'senddingOTP') {
+            loading()
+        } else {
+            hidden()
+        }
+
+        if (authStatus && authStatus === 'successSendding' && userEmail !== '') {
+            console.log('authStatus: ', authStatus)
+            navigation.navigate('EnterPin', { userEmail: userEmail });
+        }
+    }, [authStatus])
+
+    if (authError) {
+        console.log('authError: ', authError)
     }
 
     return (
@@ -27,22 +56,22 @@ export default function SignUpScreen({ navigation }: any) {
                         <View>
                             <Controller
                                 control={control}
-                                name="phone"
+                                name="email"
                                 rules={{
                                     required: 'Không được để trống!',
-                                    pattern: {
-                                        value: /^(0|\+84)(3[2-9]|5[6|8-9]|7[0-9]|8[1-9]|9[0-9])\d{7}$/,
-                                        message: 'Số điện thoại không hợp lệ'
-                                    }
+                                    // pattern: {
+                                    //     value: /^(0|\+84)(3[2-9]|5[6|8-9]|7[0-9]|8[1-9]|9[0-9])\d{7}$/,
+                                    //     message: 'Số điện thoại không hợp lệ'
+                                    // }
                                 }}
                                 render={({ field: { onChange, value } }) => (
                                     <CustomTextInput
                                         onChangeText={onChange}
                                         value={value}
                                         style={styles.textInput}
-                                        keyboardType="numeric"
+                                        keyboardType="default"
                                         errorStyle={errors.phone ? { borderColor: '#ef4444', borderWidth: 2 } : undefined}
-                                        placeholder="Nhập số điện thoại"
+                                        placeholder="Nhập email"
                                         placeholderTextColor="#6F6F6F"
                                     />
                                 )}

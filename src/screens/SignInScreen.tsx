@@ -5,16 +5,41 @@ import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import CustomColors from "../../colors";
 import { Controller, useForm } from "react-hook-form";
+import { useAppDispatch } from "../store/store";
+import { setStatusIdle, SignIn } from "../reducers/authSlice";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const { width, height } = Dimensions.get('window');
 
 export default function SignInScreen({ navigation }: any) {
     const { control, handleSubmit, formState: { errors } } = useForm();
-    const { modal } = useNotifi();
+    const { loading, modal, hidden } = useNotifi();
+    const dispatch = useAppDispatch();
+    const signInStatus = useSelector((state: any) => state.auth.status);
+    const signInError = useSelector((state: any) => state.auth.error);
 
     const onSubmit = (data: any) => {
         console.log(data);
+        dispatch(SignIn({ userEmail: data.email, password: data.password }))
     }
+
+    useEffect(() => {
+        if (signInStatus && signInStatus === 'pendingSignIn') {
+            loading();
+            return
+        } else if (signInStatus === 'successSignIn') {
+            modal({ title: 'Thông báo', message: 'Đăng nhập thành công' })
+            //set trạng thái về ban đầu
+            dispatch(setStatusIdle());
+            return
+        } else if (signInStatus === 'failSignIn') {
+            modal({ title: 'Thông báo', message: signInError })
+        } else {
+            hidden()
+            return
+        }
+    }, [signInStatus])
 
     return (
         <ImageBackground style={styles.image} source={require('../assets/background.jpg')} resizeMode="cover">
@@ -26,7 +51,7 @@ export default function SignInScreen({ navigation }: any) {
                         <View>
                             <Controller
                                 control={control}
-                                name="phone"
+                                name="email"
                                 rules={{
                                     required: 'Không được để trống!',
                                 }}
@@ -35,9 +60,10 @@ export default function SignInScreen({ navigation }: any) {
                                         onChangeText={onChange}
                                         value={value}
                                         style={styles.textInput}
-                                        keyboardType="numeric"
+                                        keyboardType="default"
                                         errorStyle={errors.phone ? { borderColor: '#ef4444', borderWidth: 2 } : undefined}
-                                        placeholder="Nhập số điện thoại"
+                                        placeholder="Nhập email"
+                                        placeholderTextColor="#6F6F6F"
                                     />
                                 )}
                             />

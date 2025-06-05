@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import EnterPinScreen from "../screens/EnterPinScreen";
-import CreatePassword from "../screens/CreatePassword";
-import SignUpScreen from "../screens/SignUpScreen";
-import SignInScreen from "../screens/SignInScreen";
 import { SafeAreaView, StatusBar } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import CustomColors from "../../colors";
+import CreatePassword from "../screens/CreatePassword";
+import EnterPinScreen from "../screens/EnterPinScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import SignInScreen from "../screens/SignInScreen";
+import SignUpScreen from "../screens/SignUpScreen";
 
 const Stack = createNativeStackNavigator();
 export default function AuthNavigator() {
@@ -20,6 +20,7 @@ export default function AuthNavigator() {
                 <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="EnterPin" component={EnterPinScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="CreatePassword" component={CreatePassword} options={{ headerShown: false }} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </SafeAreaView>
     );

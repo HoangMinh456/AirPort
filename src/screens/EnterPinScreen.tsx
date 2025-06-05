@@ -3,16 +3,25 @@ import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, Sty
 import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../store/store";
+import { sendOTP, verifyOTP } from "../reducers/authSlice";
+import useNotifi from "../hooks/useNotifi";
 
 const { width, height } = Dimensions.get('window');
 
-export default function EnterPinScreen({ navigation }: any) {
+export default function EnterPinScreen({ navigation, route }: any) {
     const length = 4;
     const [pin, setPin] = useState(Array(length).fill(''))
     const inputs = useRef<Array<TextInput | null>>([]);
     const [disableButton, setDisableButton] = useState<boolean>(true);
     const [timeLeft, setTimeLeft] = useState<number>(300);
     const [reSended, setReSended] = useState<number>(0);
+    const authStatus = useSelector((state: any) => state.auth.status);
+    const authError = useSelector((state: any) => state.auth.error);
+    const dispatch = useAppDispatch();
+    const { loading, hidden, modal } = useNotifi();
+    const { userEmail, type } = route.params;
 
     //Auto focus khoảng trống
     useEffect(() => {
@@ -80,8 +89,26 @@ export default function EnterPinScreen({ navigation }: any) {
     };
 
     const onSubmit = () => {
-        navigation.navigate('CreatePassword');
+        console.log('pin: ', pin.join(''))
+        dispatch(verifyOTP({ userEmail: userEmail, otp: pin.join('') }))
     }
+
+    useEffect(() => {
+        if (authStatus && authStatus === 'pedingVerify') {
+            loading()
+            return
+        } else if (authStatus && authStatus === 'failVerify') {
+            modal({ title: 'Thông báo', message: authError || 'Xác thực thất bại' })
+            return
+        } else if (authStatus && authStatus === 'successVerify') {
+            navigation.navigate('CreatePassword', { userEmail: userEmail, type: type ? type : '' });
+            return
+        } else {
+            hidden()
+            return
+        }
+
+    }, [authStatus])
 
     return (
         <ImageBackground style={styles.image} source={require('../assets/background.jpg')} resizeMode="cover" >
@@ -115,7 +142,7 @@ export default function EnterPinScreen({ navigation }: any) {
                         <TouchableOpacity disabled={disableButton} onPress={() => onSubmit()} style={[styles.viewButton, !disableButton && { opacity: 1 }]}>
                             <CustomText style={styles.textButtonWhite}>Tiếp tục</CustomText>
                         </TouchableOpacity>
-                        <TouchableOpacity disabled={reSended > 0} style={{ opacity: reSended > 0 ? 0.5 : 1 }} onPress={() => setReSended(70)}>
+                        <TouchableOpacity disabled={reSended > 0} style={{ opacity: reSended > 0 ? 0.5 : 1 }} onPress={() => { setReSended(70), dispatch(sendOTP(userEmail)) }}>
                             <CustomText style={styles.noCodeSended}>Không nhận được mã? {reSended > 0 && `(Gửi lại sau: ${formatTime(reSended)})`}</CustomText>
                         </TouchableOpacity>
                     </View>

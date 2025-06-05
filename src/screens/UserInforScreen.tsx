@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dimensions, Image, Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, Modal, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
@@ -7,11 +7,14 @@ import HeaderNavigation from "../components/HeaderNavigation";
 import Icons from "../components/Icons";
 import ModalSupportPhone from "../components/ModalSupportPhone";
 import { useNavigation } from "@react-navigation/native";
+import { logOut } from "../reducers/authSlice";
+import { useAppDispatch } from "../store/store";
 
 const { width, height } = Dimensions.get('window');
 
 export default function UserInforScreen() {
     const navigation = useNavigation<any>();
+    const dispatch = useAppDispatch();
     const [modalVisible, setModalVisiable] = useState<boolean>(false);
 
     return (
@@ -53,7 +56,8 @@ export default function UserInforScreen() {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => console.log()}>
+                    {/* <Pressable onPress={() => { console.log('pressable'); logOut() }}> */}
+                    <TouchableOpacity onPress={() => dispatch(logOut())}>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
                             <Icons typeIcon="MaterialCommunityIcons" nameIcon="login-variant" colorIcon={CustomColors.primary} sizeIcon={27} />
                             <View style={{ display: 'flex', rowGap: 4 }}>
@@ -62,6 +66,7 @@ export default function UserInforScreen() {
                             </View>
                         </View>
                     </TouchableOpacity>
+                    {/* </Pressable> */}
                 </View>
             </View>
             <ModalSupportPhone modalVisible={modalVisible} setModalVisiable={setModalVisiable} />
