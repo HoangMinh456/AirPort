@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Dimensions, ScrollView, View } from "react-native";
 import CustomColors from "../../colors";
@@ -7,6 +7,9 @@ import EnterOwnerInfor from "../components/EnterOwnerInfor";
 import HeaderNavigation from "../components/HeaderNavigation";
 import ScanOrEnterEcode from "../components/ScanOrEnterEcode";
 import useNotifi from "../hooks/useNotifi";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../store/store";
+import { getMemberCardByECode } from "../reducers/memberCardSlice";
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,6 +22,10 @@ export default function EnterEcodeScreen({ navigation }: any) {
     })
     const [swichCase, setSwitchCase] = useState<string>('ENTER_ECODE');
     const { modal } = useNotifi();
+    const dispatch = useAppDispatch();
+    const eCodeMemberCard = useSelector((state: any) => state.memberCard.eCode);
+    //Check đoạn swichCase là OWNER_INFOR
+    // const userName = useSelector((state: any) => state.memberCard.userInfomation.userName)
 
     //Dùng cho components EnterOwnerInfor
     const [checkInfor, setCheckInfor] = useState<boolean>(false);
@@ -32,23 +39,17 @@ export default function EnterEcodeScreen({ navigation }: any) {
         }
 
         if (swichCase === 'ENTER_ECODE') {
-            if (data.eCode === '24042004') {
-                setSwitchCase('OWNER_INFOR');
-                return;
-            } else {
-                modal({ title: 'Thông báo', message: 'E Code không tồn tại' })
-                return;
-            }
+            dispatch(getMemberCardByECode(data.eCode));
         }
 
         if (swichCase === 'OWNER_INFOR') {
-            if (data.name === 'HoangMinh' && data.card === '123456') {
-                setCheckInfor(true);
-                return;
-            } else {
-                modal({ title: 'Thông báo', message: 'Thông tin khách hàng không tồn tại!' })
-                return;
-            }
+            // if (data.name === 'HoangMinh' && data.card === '123456') {
+            //     setCheckInfor(true);
+            //     return;
+            // } else {
+            //     modal({ title: 'Thông báo', message: 'Thông tin khách hàng không tồn tại!' })
+            //     return;
+            // }
         }
     }
 
@@ -64,6 +65,14 @@ export default function EnterEcodeScreen({ navigation }: any) {
                 }
         }
     }
+
+    useEffect(() => {
+        if (eCodeMemberCard) {
+            setSwitchCase('OWNER_INFOR');
+            return;
+        }
+
+    }, [eCodeMemberCard])
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>

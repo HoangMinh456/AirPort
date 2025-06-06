@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import User from './models/User.js';
+import MemberCard from './models/MemberCard.js';
+import TicketPlan from './models/TicketPlan.js';
 
 dotenv.config();
 
@@ -34,11 +36,26 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// Hàm tạo mã khách hàng
+function generateECode() {
+    let code = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    for (let i = 0; i < 8; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        code += characters[randomIndex]
+    }
+    return code
+}
+
+// console.log(generateECode())
+
 //Nhập đường dẫn API trên điện thoại để kiểm tra xem server có hoạt động không
 app.get('/', (req, res) => {
     res.send('Server đang hoạt động');
 });
 
+
+//START auth và OTP
 app.post('/send-otp', async (req, res) => {
     const { email } = req.body
     try {
@@ -151,6 +168,55 @@ app.post('/changePassword', async (req, res) => {
         return res.status(500).json({ message: error })
     }
 })
+// END auth-OTP
+
+//START memberCard
+app.post('/createMemberCard', async (req, res) => {
+    const { userId } = req.body;
+    let code = '';
+    let isUnique = false;
+
+    while (!isUnique) {
+        code = generateECode()
+        const exis = await MemberCard.findOne({ eCode: code })
+        if (!exis) {
+            isUnique = true
+        }
+    }
+
+    try {
+        const response = await MemberCard.create({ userId: userId, eCode: code })
+
+        return res.status(201).json(response);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+
+app.get('/getMemberCardByECode/:eCode', async (req, res) => {
+    const { eCode } = req.params;
+    try {
+        const response = await MemberCard.findOne({ eCode: eCode }).populate('userId')
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+//END memberCard
+
+//START ticketPlan
+app.post('/createTicketPlan', async (req, res) => {
+    const { userId, userUse, otherUse, userTicket, otherTicket, signature } = req.body;
+    try {
+        const response = await TicketPlan.create({ userId: userId, userUse: userUse, otherUse: otherUse, userTicket: userTicket, otherTicket: otherTicket, signature: signature });
+
+        return res.status(201).json(response);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+//END ticketPlan
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
