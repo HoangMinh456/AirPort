@@ -5,7 +5,7 @@ import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import { useAppDispatch } from "../store/store";
-import { createAccount } from "../reducers/authSlice";
+import { changePasswordByEmail, createAccount, setStatusIdle } from "../reducers/authSlice";
 import useNotifi from "../hooks/useNotifi";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -14,22 +14,29 @@ const { width, height } = Dimensions.get('window');
 
 export default function CreatePassword({ route }: any) {
     const { control, handleSubmit, formState: { errors }, getValues } = useForm();
-    const { userEmail } = route.params;
+    const { userEmail, type } = route.params;
     const dispatch = useAppDispatch();
     const { loading, hidden, modal } = useNotifi();
     const authStatus = useSelector((state: any) => state.auth.status);
-    // Làm tiếp phần quên mật khẩu ở đây (type là forgot password)
+
     const onSubmit = (data: any) => {
+        if (type === 'forgotPassword') {
+            dispatch(changePasswordByEmail({ userEmail: userEmail, password: data.password }))
+            return;
+        }
         // console.log(data);
         dispatch(createAccount({ userEmail: userEmail, password: data.password }))
     }
 
     useEffect(() => {
-        if (authStatus && authStatus === 'pendingCreateAccount') {
+        if (authStatus && (authStatus === 'pendingCreateAccount' || authStatus === 'pendingChangePassword')) {
+            // console.log('Chạy vào loading')
             loading();
             return
-        } else if (authStatus === 'successCreateAccount') {
-            modal({ title: 'Thông báo', message: 'Tạo tài khoản thành công' })
+        } else if (authStatus === 'successCreateAccount' || authStatus === 'successChangePassword') {
+            console.log('Chạy vào thông báo thành công')
+            modal({ title: 'Thông báo', message: 'Thành công' })
+            dispatch(setStatusIdle());
             return
         } else {
             hidden();

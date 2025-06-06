@@ -54,6 +54,16 @@ export const getUserByEmail = createAsyncThunk('auth/forgotPassword', async (use
     }
 })
 
+export const changePasswordByEmail = createAsyncThunk('auth/changePassword', async ({ userEmail, password }: { userEmail: string, password: string }, { rejectWithValue }) => {
+    try {
+        const response = await axios.post(`${API}/changePassword`, { email: userEmail, password: password })
+        return response.data;
+    } catch (error) {
+        console.log('Lỗi ở "auth/changePassword"', error)
+        return rejectWithValue(error)
+    }
+})
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -81,6 +91,7 @@ const authSlice = createSlice({
             })
             .addCase(sendOTP.fulfilled, (state: any) => {
                 state.status = 'successSendding';
+                state.error = ''
             })
             .addCase(sendOTP.rejected, (state: any, action: any) => {
                 state.status = 'senddingFail';
@@ -91,6 +102,7 @@ const authSlice = createSlice({
             })
             .addCase(verifyOTP.fulfilled, (state: any) => {
                 state.status = 'successVerify';
+                state.error = ''
             })
             .addCase(verifyOTP.rejected, (state: any, action: any) => {
                 state.status = 'failVerify';
@@ -105,6 +117,7 @@ const authSlice = createSlice({
                 state.information.email = action.payload.email;
                 state.information.password = action.payload.password;
                 state.information.userName = action.payload.userName;
+                state.error = ''
             })
             .addCase(createAccount.rejected, (state: any, action: any) => {
                 state.status = 'failCreateAccount';
@@ -119,6 +132,7 @@ const authSlice = createSlice({
                 state.information.phone = action.payload.phone;
                 state.information.password = action.payload.password;
                 state.information.userName = action.payload.userName;
+                state.error = ''
             })
             .addCase(SignIn.rejected, (state: any, action: any) => {
                 state.status = 'failSignIn';
@@ -127,11 +141,28 @@ const authSlice = createSlice({
             .addCase(getUserByEmail.pending, (state: any) => {
                 state.status = 'pendingGetUserByEmail';
             })
-            .addCase(getUserByEmail.fulfilled, (state: any) => {
+            .addCase(getUserByEmail.fulfilled, (state: any, action: any) => {
                 state.status = 'successGetUserByEmail';
+                state.error = ''
             })
             .addCase(getUserByEmail.rejected, (state: any) => {
                 state.status = 'failGetUserByEmail';
+            })
+            .addCase(changePasswordByEmail.pending, (state: any) => {
+                state.status = 'pendingChangePassword';
+            })
+            .addCase(changePasswordByEmail.fulfilled, (state: any, action: any) => {
+                // console.log('payload: ', action.payload)
+                state.status = 'successChangePassword';
+                state.information.password = action.payload.password;
+                state.information.email = action.payload.email;
+                state.information.phone = action.payload.phone;
+                state.information.userName = action.payload.userName;
+                state.error = ''
+            })
+            .addCase(changePasswordByEmail.rejected, (state: any, action: any) => {
+                state.status = 'failChangePassword';
+                state.error = action.payload;
             })
     }
 })

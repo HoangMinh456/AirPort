@@ -7,7 +7,7 @@ import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import useNotifi from "../hooks/useNotifi";
-import { sendOTP, setStatusIdle } from "../reducers/authSlice";
+import { getUserByEmail, sendOTP, setStatusIdle } from "../reducers/authSlice";
 import { useAppDispatch } from "../store/store";
 
 const { width, height } = Dimensions.get('window');
@@ -21,9 +21,9 @@ export default function ForgotPasswordScreen({ navigation }: any) {
     const [userEmail, setUserEmail] = useState<string>('');
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        // console.log(data);
         setUserEmail(data.email);
-        dispatch(sendOTP(data.email));
+        dispatch(getUserByEmail(data.email));
     }
 
     useEffect(() => {
@@ -31,7 +31,8 @@ export default function ForgotPasswordScreen({ navigation }: any) {
             loading()
             return
         } else if (forgotPasswordStatus === 'successGetUserByEmail') {
-            navigation.navigate('EnterPin', { type: 'forgotPassword' });
+            // console.log('Chạy vào đây')
+            navigation.navigate('EnterPin', { userEmail: userEmail, type: 'forgotPassword' });
             dispatch(setStatusIdle())
             return
         } else if (forgotPasswordStatus === 'failGetUserByEmail') {
@@ -45,6 +46,8 @@ export default function ForgotPasswordScreen({ navigation }: any) {
     if (forgotPasswordError) {
         console.log('forgotPasswordError: ', forgotPasswordError)
     }
+
+    // console.log('status: ', forgotPasswordStatus)
 
     return (
         <ImageBackground style={styles.image} source={require('../assets/background.jpg')} resizeMode="cover" >
@@ -115,8 +118,7 @@ const styles = StyleSheet.create({
         borderRadius: 9999,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: CustomColors.primary,
-        opacity: 0.5
+        backgroundColor: CustomColors.primary
     },
     textInput: {
         borderWidth: 1,
