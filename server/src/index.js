@@ -116,7 +116,37 @@ app.post('/getUserByEmail', async (req, res) => {
 
         if (!response) return res.status(400).json({ message: 'Email chưa được đăng ký với bất kì tài khoản nào' })
 
-        return res.status(200).json({ message: 'Đã tìm thấy tài khoản' })
+        const otp = generateOTP();
+        const expiresAt = Date.now() + 5 * 60 * 1000;
+
+        OTP_STORE[email] = { otp: otp, expiresAt: expiresAt }
+
+        await transporter.sendMail({
+            from: `"OTP Service" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: 'Mã OTP',
+            text: `Mã OTP của bạn là: ${otp}`
+        })
+
+        return res.status(200).json({ success: true })
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+
+app.post('/changePassword', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const getUser = await User.findOne({ email: email })
+
+        if (!getUser) return res.status(400).json({ message: 'Không tìm thấy tài khoản để đổi mật khẩu' })
+
+        // console.log(getUser)
+        getUser.password = password;
+
+        await getUser.save();
+
+        return res.status(200).json(getUser);
     } catch (error) {
         return res.status(500).json({ message: error })
     }
