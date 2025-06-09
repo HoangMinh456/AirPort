@@ -195,9 +195,13 @@ app.post('/createMemberCard', async (req, res) => {
 
 app.get('/getMemberCardByECode/:eCode', async (req, res) => {
     const { eCode } = req.params;
+    // console.log('eCode backend: ', eCode)
     try {
         const response = await MemberCard.findOne({ eCode: eCode }).populate('userId')
-
+        if (!response) {
+            return res.status(400).json({ message: `Không tìm thấy MemberCard ${eCode}` })
+        }
+        // console.log('response: ', response);
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ message: error })
@@ -209,9 +213,14 @@ app.get('/getMemberCardByECode/:eCode', async (req, res) => {
 app.post('/createTicketPlan', async (req, res) => {
     const { userId, userUse, otherUse, userTicket, otherTicket, signature } = req.body;
     try {
-        const response = await TicketPlan.create({ userId: userId, userUse: userUse, otherUse: otherUse, userTicket: userTicket, otherTicket: otherTicket, signature: signature });
+        const response = await TicketPlan.create({ userId: userId, userUse: userUse, otherUse: otherUse || '', userTicket: userTicket, otherTicket: otherTicket, signature: signature });
 
-        return res.status(201).json(response);
+        if (!response) {
+            return res.status(400).json({ message: 'Lỗi lưu ảnh vé máy bay' });
+        }
+
+        // console.log(response)
+        return res.status(201).json(response.data);
     } catch (error) {
         return res.status(500).json({ message: error })
     }

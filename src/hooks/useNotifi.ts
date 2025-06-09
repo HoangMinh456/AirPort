@@ -1,4 +1,5 @@
-import { showLoading, ShowModal, showOff } from "../reducers/notifiSlice";
+
+import { showLoading, ShowModal, showOff } from "../store/slices/notifiSlice";
 import { useAppDispatch } from "../store/store";
 
 const useNotifi = () => {

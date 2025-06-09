@@ -5,8 +5,8 @@ import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../store/store";
-import { sendOTP, verifyOTP } from "../reducers/authSlice";
 import useNotifi from "../hooks/useNotifi";
+import { sendOTP, verifyOTP } from "../store/thunks/authThunk";
 
 const { width, height } = Dimensions.get('window');
 

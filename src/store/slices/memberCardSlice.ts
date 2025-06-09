@@ -1,17 +1,5 @@
-import { API } from "@env";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-export const getMemberCardByECode = createAsyncThunk('memberCard/get', async (eCode: string, { rejectWithValue }) => {
-    try {
-        const response = await axios.get(`${API}/${eCode}`);
-
-        return response.data;
-    } catch (error) {
-        console.log('Lỗi ở "memberCard/get": ', error)
-        return rejectWithValue(error)
-    }
-})
+import { createSlice } from "@reduxjs/toolkit";
+import { getMemberCardByECode } from "../thunks/memberCardThunk";
 
 const memberCardSlice = createSlice({
     name: 'memberCard',
@@ -36,6 +24,7 @@ const memberCardSlice = createSlice({
                 state.status = 'pendingGetMemberCard';
             })
             .addCase(getMemberCardByECode.fulfilled, (state: any, action: any) => {
+                // console.log('Payload: ', action)
                 state.status = 'successGetMemberCard';
                 state.userInfomation = action.payload.userId;
                 state.eCode = action.payload.eCode;
@@ -46,9 +35,10 @@ const memberCardSlice = createSlice({
             })
             .addCase(getMemberCardByECode.rejected, (state: any, action: any) => {
                 state.status = 'failGetMemberCard';
-                state.error = action.error;
+                state.error = action.payload as string;
             })
     }
 })
 
+export const { setStatusMemberCardIdle } = memberCardSlice.actions;
 export default memberCardSlice.reducer;

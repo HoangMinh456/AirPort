@@ -2,31 +2,44 @@ import { Dimensions, View } from "react-native"
 import HeaderNavigation from "../components/HeaderNavigation";
 import CustomColors from "../../colors";
 import AgreePolicy from "../components/AgreePolicy";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CustomText from "../components/CustomText";
 import Button from "../components/Button";
 import useNotifi from "../hooks/useNotifi";
 import SignatureView from "react-native-signature-canvas";
 import { useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
-import { saveSignature } from "../reducers/ticketPictureSclice";
 import { useNavigation } from "@react-navigation/native";
+import { createTicketPlan, saveSignature, setStatusTicketInfor } from "../store/slices/ticketInforSclice";
 
 const { width, height } = Dimensions.get('window');
 
 export default function SignCustomer() {
     const navigation = useNavigation<any>()
     const [isChecked, setIsChecked] = useState<boolean>(false)
-    const { modal } = useNotifi();
+    const { modal, loading } = useNotifi();
     const dispatch = useAppDispatch();
-    const signature = useSelector((state: any) => state.ticketPicture.signature);
+    const signature = useSelector((state: any) => state.ticketInfor.signature);
+    const userId = useSelector((state: any) => state.auth.information._id);
+    const dataTicket = useSelector((state: any) => state.ticketInfor)
     const signatureRef = useRef<any>(null)
-    // console.log('signature: ', signature);
+    const statusTicketInfor = useSelector((state: any) => state.ticketInfor.status);
 
+    // Tạo logic create vé máy bay 
     const onSubmit = () => {
         if (isChecked === true && signature !== '') {
-            modal({ title: 'Đăng ký thành công!' });
-            navigation.navigate('History')
+            // modal({ title: 'Đăng ký thành công!' });
+            // navigation.navigate('History')
+            const data = {
+                userId: userId,
+                userUse: dataTicket.userUse,
+                otherUse: dataTicket.otherUse,
+                userTicket: dataTicket.myTicketPicture,
+                otherTicket: dataTicket.otherTicketPicture,
+                signature: signature
+            }
+
+            dispatch(createTicketPlan(data))
         }
         if (isChecked !== true) {
             modal({ title: 'Thông báo', message: 'Vui lòng đồng ý với điều khoản và dịch vụ' });
@@ -50,6 +63,21 @@ export default function SignCustomer() {
         dispatch(saveSignature(signature))
         // modal({ title: 'Thành công', message: 'Lưu chữ ký thành công!' })
     }
+
+    useEffect(() => {
+        if (statusTicketInfor && statusTicketInfor === 'pendingCreateTicketPlan') {
+            loading();
+            return;
+        } else if (statusTicketInfor === 'successCreateTicketPlan') {
+            modal({ title: 'Thông báo', message: 'Thành công' });
+            navigation.navigate('History');
+            dispatch(setStatusTicketInfor());
+            return;
+        } else if (statusTicketInfor === 'failCreateTicketPlan') {
+            modal({ title: 'Lỗi', message: 'Thất bại, vui lòng thử lại!' })
+        }
+
+    }, [statusTicketInfor])
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>

@@ -7,8 +7,8 @@ import HeaderNavigation from "../components/HeaderNavigation";
 import Icons from "../components/Icons";
 import ModalSupportPhone from "../components/ModalSupportPhone";
 import { useNavigation } from "@react-navigation/native";
-import { logOut } from "../reducers/authSlice";
 import { useAppDispatch } from "../store/store";
+import { logOut } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 

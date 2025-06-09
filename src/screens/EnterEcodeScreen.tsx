@@ -9,23 +9,26 @@ import ScanOrEnterEcode from "../components/ScanOrEnterEcode";
 import useNotifi from "../hooks/useNotifi";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../store/store";
-import { getMemberCardByECode } from "../reducers/memberCardSlice";
+import { getMemberCardByECode } from "../store/thunks/memberCardThunk";
+import { saveNumberUses } from "../store/slices/ticketInforSclice";
 
 const { width, height } = Dimensions.get('window');
 
 export default function EnterEcodeScreen({ navigation }: any) {
     const { control, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            used: '0',
-            followWith: '0'
+            userUse: '0',
+            otherUse: '0'
         },
     })
     const [swichCase, setSwitchCase] = useState<string>('ENTER_ECODE');
-    const { modal } = useNotifi();
+    const { modal, loading, hidden } = useNotifi();
     const dispatch = useAppDispatch();
     const eCodeMemberCard = useSelector((state: any) => state.memberCard.eCode);
-    //Check đoạn swichCase là OWNER_INFOR
-    // const userName = useSelector((state: any) => state.memberCard.userInfomation.userName)
+    const memberCardStatus = useSelector((state: any) => state.memberCard.status);
+    const userInfomation = useSelector((state: any) => state.memberCard.userInfomation);
+    const errorMemberCard = useSelector((state: any) => state.memberCard.error);
+    // console.log('userInfomation: ', userInfomation)
 
     //Dùng cho components EnterOwnerInfor
     const [checkInfor, setCheckInfor] = useState<boolean>(false);
@@ -34,22 +37,29 @@ export default function EnterEcodeScreen({ navigation }: any) {
         console.log('data: ', data)
 
         if (checkInfor === true) {
-            console.log('Chạy vào đây')
-            navigation.navigate('SnapShootTicket');
+            // console.log('Chạy vào đây')
+            if (data.userUse && data.userUse > 0) {
+                dispatch(saveNumberUses({ userUse: data.userUse, otherUse: data.otherUse }))
+                navigation.navigate('SnapShootTicket');
+                return;
+            }
+            modal({ title: 'Thông báo', message: 'Số lượt sử dụng phải lớn hơn 0' })
+            return;
         }
 
         if (swichCase === 'ENTER_ECODE') {
             dispatch(getMemberCardByECode(data.eCode));
+            return;
         }
 
         if (swichCase === 'OWNER_INFOR') {
-            // if (data.name === 'HoangMinh' && data.card === '123456') {
-            //     setCheckInfor(true);
-            //     return;
-            // } else {
-            //     modal({ title: 'Thông báo', message: 'Thông tin khách hàng không tồn tại!' })
-            //     return;
-            // }
+            if (userInfomation.userName === data.userName && userInfomation.password === data.password) {
+                setCheckInfor(true);
+                return;
+            } else {
+                modal({ title: 'Thông báo', message: 'Thông tin khách hàng không tồn tại!' })
+                return;
+            }
         }
     }
 
@@ -67,12 +77,28 @@ export default function EnterEcodeScreen({ navigation }: any) {
     }
 
     useEffect(() => {
-        if (eCodeMemberCard) {
+        console.log('eCodeMemberCard: ', eCodeMemberCard)
+        if (eCodeMemberCard !== '') {
+            console.log('Chạy vào switchCase: ', eCodeMemberCard)
             setSwitchCase('OWNER_INFOR');
             return;
         }
 
     }, [eCodeMemberCard])
+
+    useEffect(() => {
+        if (memberCardStatus && memberCardStatus === 'pendingGetMemberCard') {
+            loading();
+            return;
+        } else if (memberCardStatus === 'successGetMemberCard') {
+            hidden();
+            return;
+        } else if (memberCardStatus === 'failGetMemberCard') {
+            modal({ title: 'Thông báo', message: errorMemberCard })
+            return;
+        }
+
+    }, [memberCardStatus])
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>

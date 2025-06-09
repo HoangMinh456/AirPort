@@ -7,8 +7,9 @@ import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import useNotifi from "../hooks/useNotifi";
-import { getUserByEmail, sendOTP, setStatusIdle } from "../reducers/authSlice";
 import { useAppDispatch } from "../store/store";
+import { getUserByEmail } from "../store/thunks/authThunk";
+import { setStatusIdle } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 

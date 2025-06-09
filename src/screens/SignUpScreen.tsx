@@ -5,11 +5,11 @@ import CustomColors from "../../colors";
 import AgreePolicy from "../components/AgreePolicy";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
-import { sendOTP } from "../reducers/authSlice";
 import { useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import useNotifi from "../hooks/useNotifi";
+import { sendOTP } from "../store/thunks/authThunk";
 
 const { width, height } = Dimensions.get('window');
 

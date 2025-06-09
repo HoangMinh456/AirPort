@@ -27,7 +27,7 @@ export default function ScanOrEnterEcode({ control, errors }: any) {
                             <CustomTextInput
                                 value={value}
                                 onChangeText={onChange}
-                                keyboardType="numeric"
+                                keyboardType="default"
                                 placeholder="Nhập E Code"
                                 placeholderTextColor="#737373"
                                 style={{ paddingLeft: 24, borderWidth: 1, height: 50, borderColor: errors.eCode ? CustomColors.primary : '#C1C8D1', borderRadius: 10, backgroundColor: '#fff', flex: 1 }}

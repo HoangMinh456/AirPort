@@ -1,14 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import notifiSlice from '../reducers/notifiSlice';
-import ticketPicture from '../reducers/ticketPictureSclice';
-import authSlice from '../reducers/authSlice';
+import notifiSlice from './slices/notifiSlice';
+import ticketInfor from './slices/ticketInforSclice';
+import authSlice from './slices/authSlice';
+import memberCard from './slices/memberCardSlice';
 import { useDispatch } from "react-redux";
 
 export const store = configureStore({
     reducer: {
         notifi: notifiSlice,
-        ticketPicture: ticketPicture,
+        ticketInfor: ticketInfor,
         auth: authSlice,
+        memberCard: memberCard,
     },
 });
 

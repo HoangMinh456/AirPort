@@ -6,9 +6,10 @@ import CustomTextInput from "../components/CustomTextInput";
 import CustomColors from "../../colors";
 import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch } from "../store/store";
-import { setStatusIdle, SignIn } from "../reducers/authSlice";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { SignIn } from "../store/thunks/authThunk";
+import { setStatusIdle } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 

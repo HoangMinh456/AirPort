@@ -5,10 +5,11 @@ import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
 import { useAppDispatch } from "../store/store";
-import { changePasswordByEmail, createAccount, setStatusIdle } from "../reducers/authSlice";
 import useNotifi from "../hooks/useNotifi";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+import { changePasswordByEmail, createAccount } from "../store/thunks/authThunk";
+import { setStatusIdle } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 

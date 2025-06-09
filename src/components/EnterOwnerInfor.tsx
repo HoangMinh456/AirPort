@@ -16,28 +16,28 @@ export default function EnterOwnerInfor({ control, errors, checkInfor }: any) {
                 <CustomText style={{ color: CustomColors.black }}>Owner information</CustomText>
                 <View className="flex flex-col gap-y-2 px-1">
                     <Controller
-                        name="name"
+                        name="userName"
                         control={control}
                         rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
                             <CustomTextInput
                                 value={value}
                                 onChangeText={onChange}
-                                placeholder="Tên khách hàng/Owner name"
+                                placeholder="Tên khách hàng/Owner name/email"
                                 placeholderTextColor="#737373"
                                 style={{ fontSize: 14, paddingLeft: 24, borderWidth: 1, borderColor: errors.name ? CustomColors.primary : '#C1C8D1', borderRadius: 10, backgroundColor: '#fff', height: 50 }}
                             />
                         )}
                     />
                     <Controller
-                        name="card"
+                        name="password"
                         control={control}
                         rules={{ required: true }}
                         render={({ field: { value, onChange } }) => (
                             <CustomTextInput
                                 value={value}
                                 onChangeText={onChange}
-                                placeholder="Số điện thoại/Identify card"
+                                placeholder="Số điện thoại/Identify card/Password"
                                 placeholderTextColor="#737373"
                                 style={{ fontSize: 14, paddingLeft: 24, borderWidth: 1, borderColor: errors.card ? CustomColors.primary : '#C1C8D1', borderRadius: 10, backgroundColor: '#fff', height: 50 }}
                             />
@@ -46,7 +46,7 @@ export default function EnterOwnerInfor({ control, errors, checkInfor }: any) {
 
                 </View>
             </View>
-            {checkInfor && <TableUserInfor control={control} errors={errors} />}
+            {checkInfor && <View style={{ paddingHorizontal: 4 }}><TableUserInfor control={control} errors={errors} /></View>}
         </View>
     )
 }

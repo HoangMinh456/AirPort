@@ -4,8 +4,7 @@ import { Dimensions, TouchableOpacity, View } from "react-native";
 import { RNCamera } from "react-native-camera";
 import CustomText from "./CustomText";
 import { useAppDispatch } from "../store/store";
-import { saveTicket } from "../reducers/ticketPictureSclice";
-import { handleBarCodeRead } from "../reducers/dataUserSlice";
+import { saveTicket } from "../store/slices/ticketInforSclice";
 
 const { width, height } = Dimensions.get('window');
 

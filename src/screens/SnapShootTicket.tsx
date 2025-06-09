@@ -1,26 +1,29 @@
-import { Dimensions, Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
+import { useSelector } from "react-redux";
 import CustomColors from "../../colors";
 import Button from "../components/Button";
 import CustomText from "../components/CustomText";
 import HeaderNavigation from "../components/HeaderNavigation";
 import Icons from "../components/Icons";
 import useNotifi from "../hooks/useNotifi";
-import { useSelector } from "react-redux";
 
 const { width, height } = Dimensions.get('window');
 
 export default function SnapShootTicket({ navigation }: any) {
-    const myTicketPicture = useSelector((state: any) => state.ticketPicture.myTicketPicture);
-    const otherTicketPicture = useSelector((state: any) => state.ticketPicture.otherTicketPicture);
+    const myTicketPicture = useSelector((state: any) => state.ticketInfor.myTicketPicture);
+    const otherTicketPicture = useSelector((state: any) => state.ticketInfor.otherTicketPicture);
+    const otherUse = useSelector((state: any) => state.ticketInfor.otherUse);
     const { modal } = useNotifi();
 
     const onSubmit = () => {
         if (myTicketPicture !== '') {
             navigation.navigate('SignCustomer');
+            console.log('myTicketPicture: ', myTicketPicture);
+            return
         } else {
-            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh vé máy bay!' })
+            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh vé máy bay!' });
         }
     }
 
@@ -39,16 +42,20 @@ export default function SnapShootTicket({ navigation }: any) {
                             </LinearGradient>
                         </TouchableOpacity>
                         {myTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: myTicketPicture }} resizeMode="cover" />}
-                        <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', saveTo: 'otherTicketPicture' })}>
-                            <LinearGradient colors={['#FFFFFF', '#D5D5D5']} style={{ display: 'flex', borderWidth: 1, padding: 16, borderRadius: 10, alignItems: 'center', borderColor: '#C1C8D1' }}>
-                                <View className="flex flex-row justify-between items-center">
-                                    <Icons typeIcon="Entypo" nameIcon="camera" colorIcon="#C1C8D1" sizeIcon={30} />
-                                    <CustomText style={{ color: '#000', flexGrow: 1, paddingLeft: 16 }}>Chụp ảnh vé máy bay của người đi kèm</CustomText>
-                                    <Icons typeIcon="AntDesign" nameIcon="plus" colorIcon="#C1C8D1" sizeIcon={30} />
-                                </View>
-                            </LinearGradient>
-                        </TouchableOpacity>
-                        {otherTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: otherTicketPicture }} resizeMode="cover" />}
+                        {(otherUse > 0) &&
+                            <>
+                                <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', saveTo: 'otherTicketPicture' })}>
+                                    <LinearGradient colors={['#FFFFFF', '#D5D5D5']} style={{ display: 'flex', borderWidth: 1, padding: 16, borderRadius: 10, alignItems: 'center', borderColor: '#C1C8D1' }}>
+                                        <View className="flex flex-row justify-between items-center">
+                                            <Icons typeIcon="Entypo" nameIcon="camera" colorIcon="#C1C8D1" sizeIcon={30} />
+                                            <CustomText style={{ color: '#000', flexGrow: 1, paddingLeft: 16 }}>Chụp ảnh vé máy bay của người đi kèm</CustomText>
+                                            <Icons typeIcon="AntDesign" nameIcon="plus" colorIcon="#C1C8D1" sizeIcon={30} />
+                                        </View>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                                {otherTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: otherTicketPicture }} resizeMode="cover" />}
+                            </>
+                        }
                     </View>
                     <Button onPressContinue={() => onSubmit()} />
                 </ScrollView>
