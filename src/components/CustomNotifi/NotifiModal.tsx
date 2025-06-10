@@ -12,7 +12,8 @@ export default function NotifiModal() {
     const message = useSelector((state: any) => state.notifi.message);
     const button = useSelector((state: any) => state.notifi.button);
     const title = useSelector((state: any) => state.notifi.title);
-
+    const stateNotifi = useSelector((state: any) => state.notifi);
+    // console.log('onPressButtonAccept: ', stateNotifi.onPressButtonAccept);
     if (notifiType === 'hidden') { return null; }
 
     return (
@@ -24,11 +25,22 @@ export default function NotifiModal() {
                     {button
                         ?
                         <View className="flex gap-y-2">
-                            <TouchableOpacity onPress={() => hidden()} style={{ backgroundColor: CustomColors.sercond }} className="flex items-center justify-center py-2 rounded-full">
-                                <CustomText className="text-black">Đóng</CustomText>
+                            <TouchableOpacity onPress={() => stateNotifi.onPressButtonClose !== undefined ? stateNotifi.onPressButtonClose : hidden()}
+                                style={{ backgroundColor: CustomColors.sercond }}
+                                className="flex items-center justify-center py-2 rounded-full"
+                            >
+                                <CustomText className="text-black">
+                                    {(stateNotifi.titleButtonClose && stateNotifi.titleButtonClose !== '') ? stateNotifi.titleButtonClose : 'Đóng'}
+                                </CustomText>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => hidden()} style={{ backgroundColor: CustomColors.primary }} className="flex items-center justify-center py-2 rounded-full">
-                                <CustomText className="text-white">Đã hiểu</CustomText>
+                            <TouchableOpacity
+                                onPress={() => stateNotifi.onPressButtonAccept && stateNotifi.onPressButtonAccept !== undefined ? stateNotifi.onPressButtonAccept : hidden()}
+                                style={{ backgroundColor: CustomColors.primary }}
+                                className="flex items-center justify-center py-2 rounded-full"
+                            >
+                                <CustomText className="text-white">
+                                    {(stateNotifi.titleButtonAccept && stateNotifi.titleButtonAccept !== '') ? stateNotifi.titleButtonAccept : 'Đã hiểu'}
+                                </CustomText>
                             </TouchableOpacity>
                         </View>
                         :

@@ -14,15 +14,17 @@ export default function TableUserInfor({ control, errors }: any) {
     // console.log('dataMemberCard: ', dataMemberCard);
 
     useEffect(() => {
-        if (errors.used) {
-            modal({ title: 'Thông báo', message: errors.used.message })
+        if (errors.userUse) {
+            modal({ title: 'Thông báo', message: errors.userUse.message })
         }
 
-        if (errors.followWith) {
-            modal({ title: 'Thông báo', message: errors.followWith.message })
+        if (errors.otherUse) {
+            modal({ title: 'Thông báo', message: errors.otherUse.message })
         }
     }, [errors])
     // Làm tiếp phần tính toán số lượt sử dụng để lưu vào backend
+    console.log('dataMemberCard: ', dataMemberCard);
+
     return (
         <View className="flex">
             <View style={{ display: 'flex', rowGap: 14 }} className="rounded-tl-[10px] rounded-tr-[10px] bg-white p-4">

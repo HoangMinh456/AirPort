@@ -24,8 +24,10 @@ export default function SignCustomer() {
     const dataTicket = useSelector((state: any) => state.ticketInfor)
     const signatureRef = useRef<any>(null)
     const statusTicketInfor = useSelector((state: any) => state.ticketInfor.status);
+    const error = useSelector((state: any) => state.ticketInfor.error);
 
     // Tạo logic create vé máy bay 
+    // console.log('dataTIcket: ', dataTicket);
     const onSubmit = () => {
         if (isChecked === true && signature !== '') {
             // modal({ title: 'Đăng ký thành công!' });
@@ -78,6 +80,8 @@ export default function SignCustomer() {
         }
 
     }, [statusTicketInfor])
+
+    if (error) console.log('error: ', error)
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>

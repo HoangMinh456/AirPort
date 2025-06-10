@@ -20,6 +20,9 @@ const authSlice = createSlice({
         },
         setStatusIdle(state) {
             state.status = 'idle';
+        },
+        setDataUser(state, action) {
+            state.information = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -108,5 +111,5 @@ const authSlice = createSlice({
     }
 })
 
-export const { logOut, setStatusIdle } = authSlice.actions;
+export const { logOut, setStatusIdle, setDataUser } = authSlice.actions;
 export default authSlice.reducer;

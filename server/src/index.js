@@ -213,14 +213,14 @@ app.get('/getMemberCardByECode/:eCode', async (req, res) => {
 app.post('/createTicketPlan', async (req, res) => {
     const { userId, userUse, otherUse, userTicket, otherTicket, signature } = req.body;
     try {
-        const response = await TicketPlan.create({ userId: userId, userUse: userUse, otherUse: otherUse || '', userTicket: userTicket, otherTicket: otherTicket, signature: signature });
+        const response = await TicketPlan.create({ userId: userId, userUse: userUse, otherUse: otherUse || [], userTicket: userTicket, otherTicket: otherTicket, signature: signature });
 
         if (!response) {
             return res.status(400).json({ message: 'Lỗi lưu ảnh vé máy bay' });
         }
 
         // console.log(response)
-        return res.status(201).json(response.data);
+        return res.status(201).json(response);
     } catch (error) {
         return res.status(500).json({ message: error })
     }

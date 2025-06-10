@@ -25,9 +25,9 @@ const TicketPlan = new mongoose.Schema({
         required: true
     },
     otherTicket: {
-        type: String,
+        type: [String],
         required: false,
-        default: ''
+        default: []
     },
     signature: {
         type: String,

@@ -13,8 +13,38 @@ const useNotifi = () => {
         dispatch(showLoading());
     };
 
-    const modal = ({ message, button, title }: { message?: string, button?: boolean, title: string }) => {
-        dispatch(ShowModal({ message: message, button: button, title: title }));
+    const modal = (
+        {
+            title,
+            message,
+            button,
+            titleButtonClose,
+            onPressButtonClose,
+            titleButtonAccept,
+            onPressButtonAccept
+        }
+            :
+            {
+                title: string,
+                message?: string,
+                button?: boolean,
+                titleButtonClose?: string,
+                onPressButtonClose?: () => void,
+                titleButtonAccept?: string,
+                onPressButtonAccept?: () => void
+            }
+    ) => {
+        dispatch(
+            ShowModal({
+                title: title,
+                message: message,
+                button: button,
+                titleButtonClose: titleButtonClose,
+                onPressButtonClose: onPressButtonClose,
+                titleButtonAccept: titleButtonAccept,
+                onPressButtonAccept: onPressButtonAccept
+            })
+        );
     };
 
     return { hidden, loading, modal };

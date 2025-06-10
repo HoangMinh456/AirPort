@@ -11,17 +11,29 @@ export const createTicketPlan = createAsyncThunk('ticketInfor/createTicketPlan',
     return response.data;
 })
 
+interface TicketInforState {
+    myTicketPicture: string;
+    otherTicketPicture: string[];
+    signature: string;
+    userUse: number;
+    otherUse: number;
+    status: string;
+    error: string;
+}
+
+const initialState: TicketInforState = {
+    myTicketPicture: '',
+    otherTicketPicture: [],
+    signature: '',
+    userUse: 0,
+    otherUse: 0,
+    status: 'idle',
+    error: ''
+};
+
 const ticketInfor = createSlice({
     name: 'ticketInfor',
-    initialState: {
-        myTicketPicture: '',
-        otherTicketPicture: '',
-        signature: '',
-        userUse: 0,
-        otherUse: 0,
-        status: 'idle',
-        error: ''
-    },
+    initialState,
     reducers: {
         saveTicket(
             state,
@@ -33,8 +45,12 @@ const ticketInfor = createSlice({
                 };
             }
         ) {
-            if (action.payload.type === 'camera' && ['myTicketPicture', 'otherTicketPicture'].includes(action.payload.saveTo)) {
-                state[action.payload.saveTo] = action.payload.uri;
+            if (action.payload.type === 'camera' && 'myTicketPicture'.includes(action.payload.saveTo)) {
+                state.myTicketPicture = action.payload.uri;
+            } else if (action.payload.type === 'camera' && 'otherTicketPicture'.includes(action.payload.saveTo)) {
+                if (state.otherTicketPicture.length < state.otherUse) {
+                    state.otherTicketPicture.push(action.payload.uri)
+                }
             }
         },
         saveSignature(state, action) {
@@ -46,6 +62,18 @@ const ticketInfor = createSlice({
         },
         setStatusTicketInfor(state) {
             state.status = 'idle';
+        },
+        removeTicket(state, action) {
+            state.otherTicketPicture.splice(action.payload.index, 1);
+        },
+        changeTicket(state, action) {
+            state.otherTicketPicture[action.payload.index] = action.payload.uri;
+        },
+        removeMyTicket(state) {
+            state.myTicketPicture = '';
+        },
+        changeMyTicket(state, action) {
+            state.myTicketPicture = action.payload.uri;
         }
     },
     extraReducers: (builder) => {
@@ -53,7 +81,7 @@ const ticketInfor = createSlice({
             .addCase(createTicketPlan.pending, (state) => {
                 state.status = 'pendingCreateTicketPlan';
             })
-            .addCase(createTicketPlan.fulfilled, (state, action) => {
+            .addCase(createTicketPlan.fulfilled, (state) => {
                 state.status = 'successCreateTicketPlan';
                 state.error = '';
             })
@@ -64,5 +92,5 @@ const ticketInfor = createSlice({
     }
 });
 
-export const { saveTicket, saveSignature, saveNumberUses, setStatusTicketInfor } = ticketInfor.actions;
+export const { saveTicket, saveSignature, saveNumberUses, setStatusTicketInfor, removeTicket, changeTicket, removeMyTicket, changeMyTicket } = ticketInfor.actions;
 export default ticketInfor.reducer;

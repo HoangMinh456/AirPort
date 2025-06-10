@@ -38,12 +38,12 @@ export default function EnterEcodeScreen({ navigation }: any) {
 
         if (checkInfor === true) {
             // console.log('Chạy vào đây')
-            if (data.userUse && data.userUse > 0) {
+            if (data.userUse && data.userUse === "1") {
                 dispatch(saveNumberUses({ userUse: data.userUse, otherUse: data.otherUse }))
                 navigation.navigate('SnapShootTicket');
                 return;
             }
-            modal({ title: 'Thông báo', message: 'Số lượt sử dụng phải lớn hơn 0' })
+            modal({ title: 'Thông báo', message: 'Chỉ được dùng 1 "Số lượt dùng"' })
             return;
         }
 

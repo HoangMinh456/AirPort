@@ -4,14 +4,14 @@ import { Dimensions, TouchableOpacity, View } from "react-native";
 import { RNCamera } from "react-native-camera";
 import CustomText from "./CustomText";
 import { useAppDispatch } from "../store/store";
-import { saveTicket } from "../store/slices/ticketInforSclice";
+import { changeMyTicket, changeTicket, saveTicket } from "../store/slices/ticketInforSclice";
 
 const { width, height } = Dimensions.get('window');
 
 export default function OpenCamera({ route }: any) {
-    const { type, saveTo } = route.params;
+    const { type, saveTo, index, action } = route.params;
     const navigation = useNavigation() as any;
-    const cameraRef = useRef(null)
+    const cameraRef = useRef<RNCamera | null>(null)
     const dispatch = useAppDispatch();
     console.log('type: ', type);
 
@@ -19,11 +19,28 @@ export default function OpenCamera({ route }: any) {
         if (cameraRef.current) {
             if (type === 'camera') {
                 try {
-                    const data = await cameraRef.current.takePictureAsync()
+                    const data = await cameraRef.current.takePictureAsync();
                     // console.log('data picture: ', data.uri)
+
+                    // thay đổi ảnh ticket của người đi kèm
+                    if (action === 'changeTicket') {
+                        dispatch(changeTicket({ index: index, uri: data.uri }));
+                        navigation.goBack();
+                        return;
+                    }
+
+                    // thay đổi ảnh ticket của mình
+                    if (action === 'changeMyTicket') {
+                        dispatch(changeMyTicket({ uri: data.uri }));
+                        navigation.goBack();
+                        return;
+                    }
+
+                    // chụp ảnh ticket
                     if (data.uri) {
-                        dispatch(saveTicket({ type: type, saveTo: saveTo, uri: data.uri }))
-                        navigation.goBack()
+                        dispatch(saveTicket({ type: type, saveTo: saveTo, uri: data.uri }));
+                        navigation.goBack();
+                        return;
                     }
                 } catch (error) {
                     console.warn(error)

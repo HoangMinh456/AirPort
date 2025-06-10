@@ -8,6 +8,9 @@ import CustomText from "../components/CustomText";
 import HeaderNavigation from "../components/HeaderNavigation";
 import Icons from "../components/Icons";
 import useNotifi from "../hooks/useNotifi";
+import React, { useState } from "react";
+import { useAppDispatch } from "../store/store";
+import { removeMyTicket, removeTicket } from "../store/slices/ticketInforSclice";
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,15 +18,21 @@ export default function SnapShootTicket({ navigation }: any) {
     const myTicketPicture = useSelector((state: any) => state.ticketInfor.myTicketPicture);
     const otherTicketPicture = useSelector((state: any) => state.ticketInfor.otherTicketPicture);
     const otherUse = useSelector((state: any) => state.ticketInfor.otherUse);
+    const [openSetting, setOpenSetting] = useState(false);
+    const [openOtherSetting, setOpenOtherSetting] = useState('')
     const { modal } = useNotifi();
+    const dispatch = useAppDispatch();
 
     const onSubmit = () => {
-        if (myTicketPicture !== '') {
+        if (myTicketPicture !== '' && otherUse.toString() === otherTicketPicture.length.toString()) {
             navigation.navigate('SignCustomer');
-            console.log('myTicketPicture: ', myTicketPicture);
             return
-        } else {
-            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh vé máy bay!' });
+        } else if (myTicketPicture === '') {
+            modal({ title: 'Thông báo', message: 'Vui lòng chụp ảnh vé máy bay của bạn!' });
+            return;
+        } else if (otherUse.toString() !== otherTicketPicture.length.toString()) {
+            modal({ title: 'Thông báo', message: 'Vui lòng chụp đủ ảnh vé của người đi kèm' });
+            return;
         }
     }
 
@@ -41,7 +50,37 @@ export default function SnapShootTicket({ navigation }: any) {
                                 </View>
                             </LinearGradient>
                         </TouchableOpacity>
-                        {myTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: myTicketPicture }} resizeMode="cover" />}
+                        {myTicketPicture !== '' &&
+                            <>
+                                <TouchableOpacity onPress={() => setOpenSetting(!openSetting)}>
+                                    <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: myTicketPicture }} resizeMode="cover" />
+                                </TouchableOpacity>
+                                {
+                                    openSetting &&
+                                    // <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    //     <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeMyTicket' })}>
+                                    //         <CustomText style={{ color: '#000' }}>Chỉnh sửa</CustomText>
+                                    //     </TouchableOpacity>
+                                    //     <TouchableOpacity onPress={() => dispatch(removeMyTicket())}>
+                                    //         <CustomText style={{ color: '#000' }}>Xóa</CustomText>
+                                    //     </TouchableOpacity>
+                                    // </View>
+                                    <Button styleViewContainer={{ paddingHorizontal: 0, paddingVertical: 0 }}
+                                        titleButtonBack="Chỉnh sửa"
+                                        titleButtonContinue="Xóa"
+                                        onPressBack={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeMyTicket' })}
+                                        onPressContinue={() => modal({
+                                            title: "Thông báo",
+                                            message: 'Bạn có chắc muốn xóa chứ ?',
+                                            button: true,
+                                            titleButtonClose: 'Hủy',
+                                            titleButtonAccept: 'Chắc chắn',
+                                            onPressButtonAccept: () => { dispatch(removeMyTicket()) }
+                                        })}
+                                    />
+                                }
+                            </>
+                        }
                         {(otherUse > 0) &&
                             <>
                                 <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', saveTo: 'otherTicketPicture' })}>
@@ -53,13 +92,35 @@ export default function SnapShootTicket({ navigation }: any) {
                                         </View>
                                     </LinearGradient>
                                 </TouchableOpacity>
-                                {otherTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: otherTicketPicture }} resizeMode="cover" />}
+                                {/* {otherTicketPicture !== '' && <FastImage style={{ width: width - 32, height: 202 }} source={{ uri: otherTicketPicture }} resizeMode="cover" />} */}
+                                {
+                                    otherTicketPicture.length > 0
+                                    &&
+                                    otherTicketPicture.map((item: string, index: number) => (
+                                        <React.Fragment key={`openOther${index}`}>
+                                            <TouchableOpacity onPress={() => setOpenOtherSetting(prev => prev !== `openOther${index}` ? `openOther${index}` : '')}>
+                                                <FastImage key={index} style={{ width: width - 32, height: 202 }} source={{ uri: item }} resizeMode="cover" />
+                                            </TouchableOpacity>
+                                            {
+                                                openOtherSetting === `openOther${index}` &&
+                                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                    <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeTicket', index: index })}>
+                                                        <CustomText style={{ color: '#000' }}>Chỉnh sửa</CustomText>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => dispatch(removeTicket({ index: index }))}>
+                                                        <CustomText style={{ color: '#000' }}>Xóa</CustomText>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
+                                        </React.Fragment>
+                                    ))
+                                }
                             </>
                         }
                     </View>
                     <Button onPressContinue={() => onSubmit()} />
                 </ScrollView>
-            </View>
-        </View>
+            </View >
+        </View >
     )
 }

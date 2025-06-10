@@ -12,6 +12,13 @@ export const store = configureStore({
         auth: authSlice,
         memberCard: memberCard,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: ['notifi/ShowModal'], // Bỏ qua kiểm tra cho action này
+                ignoredPaths: ['notifi.onPressButtonClose', 'notifi.onPressButtonAccept'], // Bỏ qua kiểm tra cho các trường này
+            },
+        }),
 });
 
 export type AppDispatch = typeof store.dispatch

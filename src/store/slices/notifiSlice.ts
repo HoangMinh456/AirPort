@@ -7,6 +7,10 @@ const notifiSlice = createSlice({
         message: false,
         button: false,
         title: '',
+        titleButtonClose: '',
+        titleButtonAccept: '',
+        onPressButtonClose: undefined,
+        onPressButtonAccept: undefined,
     },
     reducers: {
         showOff(state) {
@@ -22,6 +26,10 @@ const notifiSlice = createSlice({
             state.message = action.payload.message;
             state.button = action.payload?.button || false;
             state.title = action.payload.title;
+            state.titleButtonClose = action.payload.titleButtonClose || '';
+            state.titleButtonAccept = action.payload.titleButtonAccept || '';
+            state.onPressButtonClose = action.payload.onPressButtonClose || undefined;
+            state.onPressButtonAccept = action.payload.onPressButtonAccept || undefined;
         },
     },
 });

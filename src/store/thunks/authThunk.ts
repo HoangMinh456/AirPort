@@ -1,4 +1,5 @@
 import { API } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -37,6 +38,7 @@ export const createAccount = createAsyncThunk('auth/createAccount', async ({ use
 export const SignIn = createAsyncThunk('auth/signin', async ({ userEmail, password }: { userEmail: string, password: string }, { rejectWithValue }) => {
     try {
         const response = await axios.post(`${API}/signin`, { email: userEmail, password: password });
+        await AsyncStorage.setItem('userData', JSON.stringify(response.data));
         return response.data;
     } catch (error: any) {
         console.log('Lỗi ở "auth/signin": ', error.response.data.message)
