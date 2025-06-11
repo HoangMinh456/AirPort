@@ -20,7 +20,7 @@ export default function SnapShootTicket({ navigation }: any) {
     const otherUse = useSelector((state: any) => state.ticketInfor.otherUse);
     const [openSetting, setOpenSetting] = useState(false);
     const [openOtherSetting, setOpenOtherSetting] = useState('')
-    const { modal } = useNotifi();
+    const { modal, hidden } = useNotifi();
     const dispatch = useAppDispatch();
 
     const onSubmit = () => {
@@ -57,14 +57,6 @@ export default function SnapShootTicket({ navigation }: any) {
                                 </TouchableOpacity>
                                 {
                                     openSetting &&
-                                    // <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    //     <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeMyTicket' })}>
-                                    //         <CustomText style={{ color: '#000' }}>Chỉnh sửa</CustomText>
-                                    //     </TouchableOpacity>
-                                    //     <TouchableOpacity onPress={() => dispatch(removeMyTicket())}>
-                                    //         <CustomText style={{ color: '#000' }}>Xóa</CustomText>
-                                    //     </TouchableOpacity>
-                                    // </View>
                                     <Button styleViewContainer={{ paddingHorizontal: 0, paddingVertical: 0 }}
                                         titleButtonBack="Chỉnh sửa"
                                         titleButtonContinue="Xóa"
@@ -75,7 +67,11 @@ export default function SnapShootTicket({ navigation }: any) {
                                             button: true,
                                             titleButtonClose: 'Hủy',
                                             titleButtonAccept: 'Chắc chắn',
-                                            onPressButtonAccept: () => { dispatch(removeMyTicket()) }
+                                            onPressButtonAccept: () => {
+                                                dispatch(removeMyTicket());
+                                                hidden();
+                                                setOpenSetting(false);
+                                            },
                                         })}
                                     />
                                 }
@@ -103,14 +99,23 @@ export default function SnapShootTicket({ navigation }: any) {
                                             </TouchableOpacity>
                                             {
                                                 openOtherSetting === `openOther${index}` &&
-                                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                                    <TouchableOpacity onPress={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeTicket', index: index })}>
-                                                        <CustomText style={{ color: '#000' }}>Chỉnh sửa</CustomText>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => dispatch(removeTicket({ index: index }))}>
-                                                        <CustomText style={{ color: '#000' }}>Xóa</CustomText>
-                                                    </TouchableOpacity>
-                                                </View>
+                                                <Button styleViewContainer={{ paddingHorizontal: 0, paddingVertical: 0 }}
+                                                    titleButtonBack="Chỉnh sửa"
+                                                    titleButtonContinue="Xóa"
+                                                    onPressBack={() => navigation.navigate('OpenCamera', { type: 'camera', action: 'changeTicket', index: index })}
+                                                    onPressContinue={() => modal({
+                                                        title: "Thông báo",
+                                                        message: 'Bạn có chắc muốn xóa chứ ?',
+                                                        button: true,
+                                                        titleButtonClose: 'Hủy',
+                                                        titleButtonAccept: 'Chắc chắn',
+                                                        onPressButtonAccept: () => {
+                                                            dispatch(removeTicket({ index: index }));
+                                                            hidden();
+                                                            setOpenOtherSetting('');
+                                                        },
+                                                    })}
+                                                />
                                             }
                                         </React.Fragment>
                                     ))

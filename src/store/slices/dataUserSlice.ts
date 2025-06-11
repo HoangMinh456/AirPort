@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+//Dùng để quét mã QR nhưng chưa sử dụng
 export const handleBarCodeRead = createAsyncThunk('dataUser/get', async (urlAPI: string) => {
     const response = await axios.get(urlAPI);
     console.log('response', response.data);

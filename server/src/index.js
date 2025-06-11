@@ -207,6 +207,27 @@ app.get('/getMemberCardByECode/:eCode', async (req, res) => {
         return res.status(500).json({ message: error })
     }
 })
+
+app.post('/updateMemberCard', async (req, res) => {
+    const { userUse, otherUse, eCode } = req.body;
+    try {
+        const memberCard = await MemberCard.findOne({ eCode: eCode });
+        if (!memberCard) {
+            return res.status(404).json({ message: `Không tìm thấy MemberCard: ${eCode}` })
+        }
+
+        memberCard.totalUsed += Number(userUse) + Number(otherUse);
+        memberCard.userRemain -= userUse;
+        memberCard.otherRemain -= otherUse;
+
+        // console.log(memberCard);
+        await memberCard.save();
+
+        return res.status(200).json(memberCard);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
 //END memberCard
 
 //START ticketPlan

@@ -26,7 +26,7 @@ const MemberCard = new mongoose.Schema({
         required: true,
         default: 0
     },
-    otherRmain: {
+    otherRemain: {
         type: Number,
         required: true,
         default: 0

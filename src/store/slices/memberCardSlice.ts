@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getMemberCardByECode } from "../thunks/memberCardThunk";
+import { getMemberCardByECode, updateMemberCard } from "../thunks/memberCardThunk";
 
 const memberCardSlice = createSlice({
     name: 'memberCard',
@@ -35,6 +35,20 @@ const memberCardSlice = createSlice({
             })
             .addCase(getMemberCardByECode.rejected, (state: any, action: any) => {
                 state.status = 'failGetMemberCard';
+                state.error = action.payload as string;
+            })
+            .addCase(updateMemberCard.pending, (state: any) => {
+                state.status = 'pendingUpdateMemberCard';
+            })
+            .addCase(updateMemberCard.fulfilled, (state: any, action: any) => {
+                state.status = 'successUpdateMemberCard';
+                // console.log('payload: ', action.payload);
+                state.totalUsed = action.payload.totalUsed;
+                state.userRemain = action.payload.userRemain;
+                state.otherRemain = action.payload.otherRemain;
+            })
+            .addCase(updateMemberCard.rejected, (state: any, action: any) => {
+                state.status = 'failUpdateMemberCard';
                 state.error = action.payload as string;
             })
     }

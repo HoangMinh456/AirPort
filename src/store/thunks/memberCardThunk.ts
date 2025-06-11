@@ -17,3 +17,15 @@ export const getMemberCardByECode = createAsyncThunk('memberCard/get', async (eC
         return rejectWithValue(message)
     }
 })
+
+export const updateMemberCard = createAsyncThunk('memberCard/update', async ({ eCode, userUse, otherUse }: { eCode: string, userUse: number, otherUse: number }, { rejectWithValue }) => {
+    try {
+        const response = await axios.post(`${API}/updateMemberCard`, { eCode: eCode, userUse: userUse, otherUse: otherUse });
+
+        return response.data;
+    } catch (error: any) {
+        const message = error.response.data.message;
+        console.log('Lỗi ở memberCard/update: ', message);
+        return rejectWithValue(message);
+    }
+})

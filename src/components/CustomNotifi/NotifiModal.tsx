@@ -13,7 +13,7 @@ export default function NotifiModal() {
     const button = useSelector((state: any) => state.notifi.button);
     const title = useSelector((state: any) => state.notifi.title);
     const stateNotifi = useSelector((state: any) => state.notifi);
-    // console.log('onPressButtonAccept: ', stateNotifi.onPressButtonAccept);
+    console.log('onPressButtonAccept on NotifiModal: ', stateNotifi.onPressButtonAccept.toString());
     if (notifiType === 'hidden') { return null; }
 
     return (
@@ -25,7 +25,7 @@ export default function NotifiModal() {
                     {button
                         ?
                         <View className="flex gap-y-2">
-                            <TouchableOpacity onPress={() => stateNotifi.onPressButtonClose !== undefined ? stateNotifi.onPressButtonClose : hidden()}
+                            <TouchableOpacity onPress={() => stateNotifi.onPressButtonClose !== undefined ? stateNotifi.onPressButtonClose() : hidden()}
                                 style={{ backgroundColor: CustomColors.sercond }}
                                 className="flex items-center justify-center py-2 rounded-full"
                             >
@@ -34,7 +34,7 @@ export default function NotifiModal() {
                                 </CustomText>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => stateNotifi.onPressButtonAccept && stateNotifi.onPressButtonAccept !== undefined ? stateNotifi.onPressButtonAccept : hidden()}
+                                onPress={() => stateNotifi.onPressButtonAccept && stateNotifi.onPressButtonAccept !== undefined ? stateNotifi.onPressButtonAccept() : hidden()}
                                 style={{ backgroundColor: CustomColors.primary }}
                                 className="flex items-center justify-center py-2 rounded-full"
                             >

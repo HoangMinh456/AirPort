@@ -29,12 +29,13 @@ const useNotifi = () => {
                 message?: string,
                 button?: boolean,
                 titleButtonClose?: string,
-                onPressButtonClose?: () => void,
+                onPressButtonClose?: any,
                 titleButtonAccept?: string,
-                onPressButtonAccept?: () => void
+                onPressButtonAccept?: any
             }
     ) => {
-        dispatch(
+        // console.log('Đã kích hoạt modal');
+        return dispatch(
             ShowModal({
                 title: title,
                 message: message,

@@ -70,10 +70,20 @@ const ticketInfor = createSlice({
             state.otherTicketPicture[action.payload.index] = action.payload.uri;
         },
         removeMyTicket(state) {
+            console.log('Đã xóa ảnh chính')
             state.myTicketPicture = '';
         },
         changeMyTicket(state, action) {
             state.myTicketPicture = action.payload.uri;
+        },
+        resetAllStateTicketInfor(state) {
+            state.myTicketPicture = '';
+            state.otherTicketPicture = [];
+            state.signature = '';
+            state.userUse = 0;
+            state.otherUse = 0;
+            state.status = 'idle';
+            state.error = ''
         }
     },
     extraReducers: (builder) => {
@@ -92,5 +102,5 @@ const ticketInfor = createSlice({
     }
 });
 
-export const { saveTicket, saveSignature, saveNumberUses, setStatusTicketInfor, removeTicket, changeTicket, removeMyTicket, changeMyTicket } = ticketInfor.actions;
+export const { saveTicket, saveSignature, saveNumberUses, setStatusTicketInfor, removeTicket, changeTicket, removeMyTicket, changeMyTicket, resetAllStateTicketInfor } = ticketInfor.actions;
 export default ticketInfor.reducer;

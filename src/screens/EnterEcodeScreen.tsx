@@ -43,7 +43,11 @@ export default function EnterEcodeScreen({ navigation }: any) {
                 navigation.navigate('SnapShootTicket');
                 return;
             }
-            modal({ title: 'Thông báo', message: 'Chỉ được dùng 1 "Số lượt dùng"' })
+            if (data.userUse && data.userUse === "0") {
+                modal({ title: 'Thông báo', message: '"Số lượt sử dụng" phải lớn hơn 0' })
+                return;
+            }
+            modal({ title: 'Thông báo', message: '"Số lượt sử dụng" chỉ áp dụng cho 1 khách' })
             return;
         }
 

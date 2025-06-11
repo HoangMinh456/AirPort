@@ -10,7 +10,8 @@ import SignatureView from "react-native-signature-canvas";
 import { useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { createTicketPlan, saveSignature, setStatusTicketInfor } from "../store/slices/ticketInforSclice";
+import { createTicketPlan, resetAllStateTicketInfor, saveSignature, setStatusTicketInfor } from "../store/slices/ticketInforSclice";
+import { updateMemberCard } from "../store/thunks/memberCardThunk";
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,14 +20,22 @@ export default function SignCustomer() {
     const [isChecked, setIsChecked] = useState<boolean>(false)
     const { modal, loading } = useNotifi();
     const dispatch = useAppDispatch();
-    const signature = useSelector((state: any) => state.ticketInfor.signature);
+
+    //Thông tin từ state User
     const userId = useSelector((state: any) => state.auth.information._id);
+
+    //Thông tin từ state thẻ thành viên (Member Card)
+    const eCode = useSelector((state: any) => state.memberCard.eCode);
+    const statusMemberCard = useSelector((state: any) => state.memberCard.status);
+    const errorMemberCard = useSelector((state: any) => state.memberCard.error);
+
+    //Thông tin từ state lưu dữ liệu để tạo Ticket Plan
+    const signature = useSelector((state: any) => state.ticketInfor.signature);
     const dataTicket = useSelector((state: any) => state.ticketInfor)
     const signatureRef = useRef<any>(null)
     const statusTicketInfor = useSelector((state: any) => state.ticketInfor.status);
     const error = useSelector((state: any) => state.ticketInfor.error);
 
-    // Tạo logic create vé máy bay 
     // console.log('dataTIcket: ', dataTicket);
     const onSubmit = () => {
         if (isChecked === true && signature !== '') {
@@ -40,7 +49,7 @@ export default function SignCustomer() {
                 otherTicket: dataTicket.otherTicketPicture,
                 signature: signature
             }
-
+            // Tạo vé máy bay
             dispatch(createTicketPlan(data))
         }
         if (isChecked !== true) {
@@ -66,22 +75,42 @@ export default function SignCustomer() {
         // modal({ title: 'Thành công', message: 'Lưu chữ ký thành công!' })
     }
 
+    //Chạy chức năng theo từng trạng thái của TicketInfor (Tạo ticket plan)
     useEffect(() => {
         if (statusTicketInfor && statusTicketInfor === 'pendingCreateTicketPlan') {
             loading();
             return;
         } else if (statusTicketInfor === 'successCreateTicketPlan') {
-            modal({ title: 'Thông báo', message: 'Thành công' });
-            navigation.navigate('History');
-            dispatch(setStatusTicketInfor());
+            //Cập nhật số lượng sử dụng của Member Card
+            dispatch(updateMemberCard({ eCode: eCode, userUse: dataTicket.userUse, otherUse: dataTicket.otherUse }));
+            dispatch(resetAllStateTicketInfor());
             return;
         } else if (statusTicketInfor === 'failCreateTicketPlan') {
             modal({ title: 'Lỗi', message: 'Thất bại, vui lòng thử lại!' })
         }
 
-    }, [statusTicketInfor])
+    }, [statusTicketInfor]);
 
-    if (error) console.log('error: ', error)
+    //Chạy chức năng theo từng trạng thái của MemberCard (Cập nhật số lượt sử dùng còn lại của MemberCard)
+    useEffect(() => {
+        if (statusMemberCard && statusMemberCard === 'pendingUpdateMemberCard') {
+            loading();
+            return;
+        }
+        //Chuyển trang sau khi cập nhật xong
+        if (statusMemberCard && statusMemberCard === 'successUpdateMemberCard') {
+            modal({ title: 'Thông báo', message: 'Thành công' });
+            navigation.navigate('History');
+            dispatch(setStatusTicketInfor());
+            return;
+        }
+        if (statusMemberCard && statusMemberCard === 'failUpdateMemberCard') {
+            modal({ title: 'Lỗi khi cập nhật MemberCard', message: errorMemberCard })
+        }
+    }, [statusMemberCard]);
+
+    if (error) console.log('error: ', error);
+    if (errorMemberCard) console.log('error MemberCard: ', errorMemberCard);
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
