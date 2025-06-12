@@ -9,6 +9,7 @@ import ModalSupportPhone from "../components/ModalSupportPhone";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch } from "../store/store";
 import { logOut } from "../store/slices/authSlice";
+import { clearECode } from "../store/slices/memberCardSlice";
 
 const { width, height } = Dimensions.get('window');
 
@@ -56,8 +57,7 @@ export default function UserInforScreen() {
                             </View>
                         </View>
                     </TouchableOpacity>
-                    {/* <Pressable onPress={() => { console.log('pressable'); logOut() }}> */}
-                    <TouchableOpacity onPress={() => dispatch(logOut())}>
+                    <TouchableOpacity onPress={() => { dispatch(logOut()), dispatch(clearECode()) }}>
                         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 10, paddingVertical: 16, paddingHorizontal: 20, columnGap: 25 }}>
                             <Icons typeIcon="MaterialCommunityIcons" nameIcon="login-variant" colorIcon={CustomColors.primary} sizeIcon={27} />
                             <View style={{ display: 'flex', rowGap: 4 }}>

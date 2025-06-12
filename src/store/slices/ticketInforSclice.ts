@@ -1,15 +1,5 @@
-import { API } from "@env";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-export const createTicketPlan = createAsyncThunk('ticketInfor/createTicketPlan', async (
-    { userId, userUse, otherUse, userTicket, otherTicket, signature }
-        :
-        { userId: string, userUse: string, otherUse: string, userTicket: string, otherTicket?: string, signature: string }) => {
-    const response = await axios.post(`${API}/createTicketPlan`, { userId, userUse, otherUse: otherUse || '', userTicket, otherTicket, signature })
-
-    return response.data;
-})
+import { createSlice } from "@reduxjs/toolkit";
+import { createTicketPlan, getAllTicketPlan, getSingleTicketPlanById } from "../thunks/ticketInforThunk";
 
 interface TicketInforState {
     myTicketPicture: string;
@@ -19,6 +9,7 @@ interface TicketInforState {
     otherUse: number;
     status: string;
     error: string;
+    ticketPlanStore: string[]
 }
 
 const initialState: TicketInforState = {
@@ -28,7 +19,8 @@ const initialState: TicketInforState = {
     userUse: 0,
     otherUse: 0,
     status: 'idle',
-    error: ''
+    error: '',
+    ticketPlanStore: []
 };
 
 const ticketInfor = createSlice({
@@ -97,6 +89,27 @@ const ticketInfor = createSlice({
             })
             .addCase(createTicketPlan.rejected, (state, action) => {
                 state.status = 'failCreateTicketPlan';
+                state.error = action.payload as string;
+            })
+            .addCase(getAllTicketPlan.pending, (state) => {
+                state.status = 'pendingGetAllTicketPlan';
+            })
+            .addCase(getAllTicketPlan.fulfilled, (state, action) => {
+                state.status = 'successGetAllTicketPlan';
+                state.ticketPlanStore = action.payload;
+            })
+            .addCase(getAllTicketPlan.rejected, (state, action) => {
+                state.status = 'failGetAllTicketPlan';
+                state.error = action.payload as string;
+            })
+            .addCase(getSingleTicketPlanById.pending, (state) => {
+                state.status = 'pendingGetSingleTicketPlanById';
+            })
+            .addCase(getSingleTicketPlanById.fulfilled, (state) => {
+                state.status = 'successGetSingleTicketPlan';
+            })
+            .addCase(getSingleTicketPlanById.rejected, (state, action) => {
+                state.status = 'failGetSingleTicketPlan';
                 state.error = action.payload as string;
             })
     }

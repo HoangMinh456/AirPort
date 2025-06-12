@@ -13,7 +13,6 @@ export default function NotifiModal() {
     const button = useSelector((state: any) => state.notifi.button);
     const title = useSelector((state: any) => state.notifi.title);
     const stateNotifi = useSelector((state: any) => state.notifi);
-    console.log('onPressButtonAccept on NotifiModal: ', stateNotifi.onPressButtonAccept.toString());
     if (notifiType === 'hidden') { return null; }
 
     return (

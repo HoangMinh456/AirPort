@@ -25,9 +25,10 @@ export const verifyOTP = createAsyncThunk('auth/verifyOTP', async ({ userEmail, 
     }
 })
 
-export const createAccount = createAsyncThunk('auth/createAccount', async ({ userEmail, password }: { userEmail: string, password: string }, { rejectWithValue }) => {
+export const createAccount = createAsyncThunk('auth/createAccount', async ({ userEmail, password, userName }: { userEmail: string, password: string, userName: string }, { rejectWithValue }) => {
+    // console.log('userName: ', userName);
     try {
-        const response = await axios.post(`${API}/create-account`, { email: userEmail, password: password })
+        const response = await axios.post(`${API}/create-account`, { email: userEmail, password: password, userName: userName })
         return response.data;
     } catch (error: any) {
         console.log('Lỗi ở "auth/createAccount": ', error)

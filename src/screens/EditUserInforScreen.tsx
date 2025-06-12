@@ -7,24 +7,26 @@ import Button from "../components/Button"
 import { Controller, useForm } from "react-hook-form"
 import useNotifi from "../hooks/useNotifi"
 import { useNavigation } from "@react-navigation/native"
+import { useSelector } from "react-redux"
 
 const { width, height } = Dimensions.get('window')
 
 export default function EditUserInforScreen() {
     const navigation = useNavigation<any>();
+    const userInformation = useSelector((state: any) => state.auth.information);
     const { control, handleSubmit, formState: { errors }, reset } = useForm({
         defaultValues: {
-            name: 'Hoàng Minh',
-            phone: '08736554923',
-            email: 'minh@gmail.com'
+            name: userInformation.userName,
+            phone: userInformation.phone,
+            email: userInformation.email
         }
-    })
+    });
     const { modal } = useNotifi();
 
     const onSubmit = (data: any) => {
         console.log('data: ', data)
         modal({ title: 'Thông báo', message: 'Cập nhật thành công' })
-    }
+    };
 
     return (
         <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>

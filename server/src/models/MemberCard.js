@@ -14,7 +14,7 @@ const MemberCard = new mongoose.Schema({
     totalUse: {
         type: Number,
         required: true,
-        default: 0
+        default: 10
     },
     totalUsed: {
         type: Number,
@@ -24,12 +24,12 @@ const MemberCard = new mongoose.Schema({
     userRemain: {
         type: Number,
         required: true,
-        default: 0
+        default: 5
     },
     otherRemain: {
         type: Number,
         required: true,
-        default: 0
+        default: 5
     }
 })
 

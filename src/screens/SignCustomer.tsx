@@ -10,8 +10,9 @@ import SignatureView from "react-native-signature-canvas";
 import { useAppDispatch } from "../store/store";
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { createTicketPlan, resetAllStateTicketInfor, saveSignature, setStatusTicketInfor } from "../store/slices/ticketInforSclice";
+import { resetAllStateTicketInfor, saveSignature, setStatusTicketInfor } from "../store/slices/ticketInforSclice";
 import { updateMemberCard } from "../store/thunks/memberCardThunk";
+import { createTicketPlan } from "../store/thunks/ticketInforThunk";
 
 const { width, height } = Dimensions.get('window');
 

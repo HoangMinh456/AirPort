@@ -21,12 +21,13 @@ export default function CreatePassword({ route }: any) {
     const authStatus = useSelector((state: any) => state.auth.status);
 
     const onSubmit = (data: any) => {
+        // console.log('userName ở đoạn CreatePassword: ', userEmail.split('@')[0]);
         if (type === 'forgotPassword') {
             dispatch(changePasswordByEmail({ userEmail: userEmail, password: data.password }))
             return;
         }
         // console.log(data);
-        dispatch(createAccount({ userEmail: userEmail, password: data.password }))
+        dispatch(createAccount({ userEmail: userEmail, password: data.password, userName: userEmail.split('@')[0] }))
     }
 
     useEffect(() => {

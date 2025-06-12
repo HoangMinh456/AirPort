@@ -16,6 +16,9 @@ const memberCardSlice = createSlice({
     reducers: {
         setStatusMemberCardIdle(state) {
             state.status = 'idle';
+        },
+        clearECode(state) {
+            state.eCode = '';
         }
     },
     extraReducers: (builder) => {
@@ -54,5 +57,5 @@ const memberCardSlice = createSlice({
     }
 })
 
-export const { setStatusMemberCardIdle } = memberCardSlice.actions;
+export const { setStatusMemberCardIdle, clearECode } = memberCardSlice.actions;
 export default memberCardSlice.reducer;

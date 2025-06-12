@@ -41,7 +41,7 @@ const TicketPlan = new mongoose.Schema({
     typeTicket: {
         type: String,
         enum: ['Business', 'Regular'], //Thương gia và phổ thông
-        default: undefined
+        default: 'Regular'
     }
 })
 

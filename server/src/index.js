@@ -104,12 +104,13 @@ app.post('/verify-otp', async (req, res) => {
 })
 
 app.post('/create-account', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, userName } = req.body;
     try {
-        const response = await User.create({ email: email, password: password, userName: email })
+        const response = await User.create({ email: email, password: password, userName: userName });
+
         return res.status(201).json(response);
     } catch (error) {
-        return res.status(500).json({ message: error })
+        return res.status(500).json({ message: error });
     }
 })
 
@@ -191,14 +192,22 @@ app.post('/changeInformationUser', async (req, res) => {
     }
 })
 
-app.post('/changePassword', async (req, res) => {
-    const { userId, newPassword } = req.body;
+app.post('/changeOldPassword', async (req, res) => {
+    const { userId, oldPassword, newPassword } = req.body;
     try {
         const userData = await User.findOne({ userId: userId });
 
         if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' });
+
+        if (userData.password !== oldPassword) return res.status(400).json({ message: 'Mật khẩu cũ không trùng khớp (back-end check)' })
+
+        userData.password = newPassword;
+
+        await userData.save();
+
+        return res.status(200).json(userData);
     } catch (error) {
-        return res.status(500).json({ message: error })
+        return res.status(500).json({ message: error });
     }
 })
 
@@ -219,11 +228,14 @@ app.post('/createMemberCard', async (req, res) => {
     }
 
     try {
-        const response = await MemberCard.create({ userId: userId, eCode: code })
+        const exitCreate = await MemberCard.findOne({ userId: userId });
+        if (exitCreate) return res.status(400).json({ message: 'Tài khoản đã có MemberCard' });
+
+        const response = await MemberCard.create({ userId: userId, eCode: code });
 
         return res.status(201).json(response);
     } catch (error) {
-        return res.status(500).json({ message: error })
+        return res.status(500).json({ message: error });
     }
 })
 
@@ -290,6 +302,28 @@ app.get('/getAllTicketPlan/:userId', async (req, res) => {
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ message: error })
+    }
+})
+
+app.post('/confirmTicketPlan', async (req, res) => {
+    const { userId, ticketId, typeTicket, adminConfirm } = req.body;
+    try {
+        //check role Admin
+        const exitUser = await User.findOne({ _id: userId });
+        if (!exitUser) return res.status(400).json({ message: 'Không tìm thấy tài khoản' });
+        if (exitUser.role !== 'admin') return res.status(400).json({ message: 'Bạn không có quyền' });
+
+        //Tìm vé để xác minh
+        const response = await TicketPlan.findOne({ _id: ticketId });
+        if (!response) return res.status(400).json({ message: 'Không tìm thấy vé máy bay' });
+        response.adminConfirm = adminConfirm;
+        response.typeTicket = typeTicket;
+
+        await response.save();
+
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ message: error });
     }
 })
 //END ticketPlan

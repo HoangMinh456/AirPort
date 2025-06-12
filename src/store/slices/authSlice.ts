@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { changePasswordByEmail, createAccount, getUserByEmail, sendOTP, SignIn, verifyOTP } from "../thunks/authThunk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const authSlice = createSlice({
     name: 'auth',
@@ -17,6 +18,7 @@ const authSlice = createSlice({
     reducers: {
         logOut(state) {
             state.information.email = ''
+            AsyncStorage.removeItem('userData');
         },
         setStatusIdle(state) {
             state.status = 'idle';
@@ -66,7 +68,7 @@ const authSlice = createSlice({
                 state.error = action.payload;
             })
             .addCase(SignIn.pending, (state: any) => {
-                state.status = 'pendingSignIn'
+                state.status = 'pendingSignIn';
             })
             .addCase(SignIn.fulfilled, (state: any, action: any) => {
                 console.log('payload: ', action.payload._id)
