@@ -32,6 +32,16 @@ const TicketPlan = new mongoose.Schema({
     signature: {
         type: String,
         required: true
+    },
+    adminConfirm: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    typeTicket: {
+        type: String,
+        enum: ['Business', 'Regular'], //Thương gia và phổ thông
+        default: undefined
     }
 })
 

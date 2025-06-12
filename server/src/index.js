@@ -170,6 +170,40 @@ app.post('/changePassword', async (req, res) => {
 })
 // END auth-OTP
 
+//START user
+
+app.post('/changeInformationUser', async (req, res) => {
+    const { userId, name, phone, email } = req.body;
+    try {
+        const userData = await User.findOne({ userId: userId });
+
+        if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' })
+
+        userData.userName = name;
+        userData.phone = phone;
+        userData.email = email;
+
+        await userData.save();
+
+        return res.status(200).json(userData);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+
+app.post('/changePassword', async (req, res) => {
+    const { userId, newPassword } = req.body;
+    try {
+        const userData = await User.findOne({ userId: userId });
+
+        if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' });
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+
+//END user
+
 //START memberCard
 app.post('/createMemberCard', async (req, res) => {
     const { userId } = req.body;
@@ -242,6 +276,18 @@ app.post('/createTicketPlan', async (req, res) => {
 
         // console.log(response)
         return res.status(201).json(response);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
+
+app.get('/getAllTicketPlan/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const response = await TicketPlan.find({ userId: userId }).populate('userId');
+
+        return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ message: error })
     }
