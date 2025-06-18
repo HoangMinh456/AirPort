@@ -1,15 +1,14 @@
-import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
-import useNotifi from "../hooks/useNotifi";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Dimensions, Image, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
+import { useSelector } from "react-redux";
+import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import CustomTextInput from "../components/CustomTextInput";
-import CustomColors from "../../colors";
-import { Controller, useForm } from "react-hook-form";
+import useNotifi from "../hooks/useNotifi";
 import { useAppDispatch } from "../store/store";
-import { useSelector } from "react-redux";
-import { useEffect } from "react";
 import { SignIn } from "../store/thunks/authThunk";
-import { setStatusIdle } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,18 +20,13 @@ export default function SignInScreen({ navigation }: any) {
     const signInError = useSelector((state: any) => state.auth.error);
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        // console.log(data);
         dispatch(SignIn({ userEmail: data.email, password: data.password }))
     }
 
     useEffect(() => {
         if (signInStatus && signInStatus === 'pendingSignIn') {
             loading();
-            return
-        } else if (signInStatus === 'successSignIn') {
-            modal({ title: 'Thông báo', message: 'Đăng nhập thành công' })
-            //set trạng thái về ban đầu
-            dispatch(setStatusIdle());
             return
         } else if (signInStatus === 'failSignIn') {
             modal({ title: 'Thông báo', message: signInError })

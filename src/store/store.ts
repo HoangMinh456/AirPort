@@ -16,7 +16,7 @@ export const store = configureStore({
         getDefaultMiddleware({
             serializableCheck: {
                 ignoredActions: ['notifi/ShowModal'], // Bỏ qua kiểm tra cho action này
-                ignoredPaths: ['notifi.onPressButtonClose', 'notifi.onPressButtonAccept'], // Bỏ qua kiểm tra cho các trường này
+                ignoredPaths: ['notifi.onPressButtonClose', 'notifi.onPressButtonAccept', 'notifi.onPressSingleButton'], // Bỏ qua kiểm tra cho các trường này
             },
         }),
 });

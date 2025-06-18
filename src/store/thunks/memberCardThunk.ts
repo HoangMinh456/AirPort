@@ -29,3 +29,17 @@ export const updateMemberCard = createAsyncThunk('memberCard/update', async ({ e
         return rejectWithValue(message);
     }
 })
+
+export const getECodeByQR = createAsyncThunk('memberCard/getECodeByQR', async ({ API_URL }: { API_URL: string }, { rejectWithValue }) => {
+    const newURL = API_URL.replace("http://localhost:3000", API);
+    // console.log('newURL: ', newURL);
+    try {
+        const response = await axios.get(newURL.trim());
+        // console.log('response.data: ', response.data);
+        return response.data;
+    } catch (error: any) {
+        const message = error.response.data.message;
+        console.log('Lỗi ở memberCard/getECodeByQR', message)
+        return rejectWithValue(message);
+    }
+})

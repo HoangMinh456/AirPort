@@ -22,6 +22,11 @@ mongoose.connect(MONGO_URI, {
 }).then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB lỗi kết nối: ', err));
 
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
 let OTP_STORE = {}
 
 const generateOTP = () => {
@@ -173,29 +178,10 @@ app.post('/changePassword', async (req, res) => {
 
 //START user
 
-app.post('/changeInformationUser', async (req, res) => {
-    const { userId, name, phone, email } = req.body;
-    try {
-        const userData = await User.findOne({ userId: userId });
-
-        if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' })
-
-        userData.userName = name;
-        userData.phone = phone;
-        userData.email = email;
-
-        await userData.save();
-
-        return res.status(200).json(userData);
-    } catch (error) {
-        return res.status(500).json({ message: error })
-    }
-})
-
 app.post('/changeOldPassword', async (req, res) => {
     const { userId, oldPassword, newPassword } = req.body;
     try {
-        const userData = await User.findOne({ userId: userId });
+        const userData = await User.findOne({ _id: userId });
 
         if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' });
 
@@ -208,6 +194,24 @@ app.post('/changeOldPassword', async (req, res) => {
         return res.status(200).json(userData);
     } catch (error) {
         return res.status(500).json({ message: error });
+    }
+})
+
+app.post('/updateUserInformation', async (req, res) => {
+    const { userId, email, phone, userName } = req.body;
+    try {
+        const userData = await User.findOne({ _id: userId });
+
+        if (!userData) return res.status(400).json({ message: 'Không tìm thấy User' });
+
+        userData.email = email;
+        userData.phone = phone;
+        userData.userName = userName;
+
+        await userData.save();
+        return res.status(200).json(userData);
+    } catch (error) {
+        return res.status(500).json({ message: error })
     }
 })
 
@@ -274,6 +278,18 @@ app.post('/updateMemberCard', async (req, res) => {
         return res.status(500).json({ message: error })
     }
 })
+
+app.get('/getECodeByQR/:eCode', async (req, res) => {
+    const { eCode } = req.params;
+    try {
+        const memberCard = await MemberCard.findOne({ eCode: eCode }).populate('userId');
+        if (memberCard.length < 1) return res.status(400).json({ message: 'Không có tài khoản MemberCard nào' });
+
+        return res.status(200).json(memberCard);
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+})
 //END memberCard
 
 //START ticketPlan
@@ -327,7 +343,3 @@ app.post('/confirmTicketPlan', async (req, res) => {
     }
 })
 //END ticketPlan
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});

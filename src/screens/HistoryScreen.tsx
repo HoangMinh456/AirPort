@@ -11,7 +11,6 @@ import { getAllTicketPlan } from "../store/thunks/ticketInforThunk";
 import useNotifi from "../hooks/useNotifi";
 import { setStatusTicketInfor } from "../store/slices/ticketInforSclice";
 import { useFocusEffect } from "@react-navigation/native";
-// import { BlurView } from "@react-native-community/blur";
 
 const { width, height } = Dimensions.get('window')
 
@@ -33,7 +32,7 @@ export default function HistoryScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            console.log('Chạy vào trong useFocusEffect');
+            // console.log('Chạy vào trong useFocusEffect');
             dispatch(getAllTicketPlan({ userId }));
         }, [userId])
     );
@@ -59,12 +58,14 @@ export default function HistoryScreen() {
 
     useEffect(() => {
         if (statusTicketInfor && statusTicketInfor === 'pendingGetAllTicketPlan') {
-            loading();
+            // loading();
+            setRefreshing(true);
             return;
         }
         if (statusTicketInfor && statusTicketInfor === 'successGetAllTicketPlan') {
             dispatch(setStatusTicketInfor())
             hidden();
+            setRefreshing(false);
             return;
         }
         if (statusTicketInfor && statusTicketInfor === 'failGetAllTicketPlan') {
@@ -74,13 +75,19 @@ export default function HistoryScreen() {
     }, [statusTicketInfor])
 
     const onRefresh = useCallback(() => {
-        //Lắp phần Call API lấy dữ liệu ở đây
+        setRefreshing(true);
+        dispatch(getAllTicketPlan({ userId }));
     }, [data])
 
     if (error) return console.log('error HistoryScreen: ', error);
 
     return (
-        <View style={{ width: width, height: height, backgroundColor: CustomColors.backgroundColor }}>
+        <View style={{ width: width, backgroundColor: CustomColors.backgroundColor }}>
+            {/* <FlatList
+                data={[1]}
+                keyExtractor={item => item.toString()}
+                renderItem={() => (
+                    <> */}
             <View className="flex justify-between h-full">
                 <HeaderNavigation title="Lịch sử" goBack={false} />
                 {/* Giao diện khi đã có giao dịch  */}
@@ -123,95 +130,60 @@ export default function HistoryScreen() {
                     }}
                     onCancel={() => setOpenToDate(false)}
                 />
-                <ScrollView>
-                    <View style={{ flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20, rowGap: 10 }}>
-                        {/* {
-                            data?.length > 0
-                                ?
-                                filterDate.map((item: any) => {
-                                    return (
-                                        <View key={item._id} style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff' }}>
-                                            <View style={styles.containerViewTicket}>
-                                                <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>Phòng chờ</CustomText>
-                                                <CustomText style={{ flexGrow: 1, color: CustomColors.primary, fontSize: 15, fontWeight: '700', paddingLeft: 4 }}>Thương gia sông hồng</CustomText>
-                                                <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>({item.userUse + item.otherUse})</CustomText>
-                                            </View>
-                                            <View style={styles.containerViewTicket}>
-                                                <CustomText style={styles.label}>Họ và tên:</CustomText>
-                                                <CustomText style={styles.text}>{item.userId.userName}</CustomText>
-                                            </View>
-                                            <View style={styles.containerViewTicket}>
-                                                <CustomText style={styles.label}>Thời gian sử dụng:</CustomText>
-                                                <CustomText style={styles.text}>
-                                                    {
-                                                        item.adminConfirm === true
-                                                            ?
-                                                            `${new Date(item.timeUsed).getHours()}:${new Date(item.timeUsed).getMinutes().toString().padStart(2, '0')} - ${new Date(item.timeUsed).getDate()}/${new Date(item.timeUsed).getMonth() + 1}/${new Date(item.timeUsed).getFullYear()}`
-                                                            :
-                                                            <CustomText style={{ color: '#000', fontSize: 14, fontWeight: '700' }}>Chờ xác nhận</CustomText>
-                                                    }
-                                                </CustomText>
-                                            </View>
-                                            <View style={styles.containerViewTicket}>
-                                                <CustomText style={styles.label}>Số lượt sử dụng:</CustomText>
-                                                <CustomText style={styles.text}>{item.userUse}</CustomText>
-                                            </View>
-                                            <View style={styles.containerViewTicket}>
-                                                <CustomText style={styles.label}>Số lượt khách đi kèm:</CustomText>
-                                                <CustomText style={styles.text}>{item.otherUse}</CustomText>
-                                            </View>
-                                        </View>
-                                    )
-                                })
-                                :
-                                <View style={{ flexGrow: 1 }}>
-                                    <CustomText style={{ color: CustomColors.black, fontSize: 14, textAlign: 'center', marginTop: '20%' }}>Chưa có giao dịch nào</CustomText>
+                <View style={{ flexGrow: 1, paddingHorizontal: 16, flex: 1 }}>
+                    <FlatList
+                        data={filterDate}
+                        keyExtractor={(item) => item._id}
+                        showsVerticalScrollIndicator={false}
+                        ItemSeparatorComponent={() => <View />}
+                        renderItem={({ item }) => (
+                            <View key={item._id} style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, marginTop: 10, marginBottom: 10, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff' }}>
+                                <View style={styles.containerViewTicket}>
+                                    <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>
+                                        Phòng chờ
+                                    </CustomText>
+                                    <CustomText style={{ flexGrow: 1, color: CustomColors.primary, fontSize: 15, fontWeight: '700', paddingLeft: 4 }}>
+                                        {item.typeTicket === 'Business' ? 'Thương gia sông hồng' : item.typeTicket === 'Regular' ? 'Phổ thông' : item.typeTicket === 'none' ? 'Chưa xác nhận' : 'Không có dữ liệu'}
+                                    </CustomText>
+                                    <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>
+                                        ({item.userUse + item.otherUse})
+                                    </CustomText>
                                 </View>
-                        } */}
-
-                        <FlatList
-                            data={filterDate}
-                            keyExtractor={(item) => item._id}
-                            renderItem={({ item }) => (
-                                <View key={item._id} style={{ rowGap: 5, paddingHorizontal: 20, paddingVertical: 16, borderWidth: 1, borderColor: '#D9D9D9', borderRadius: 10, backgroundColor: '#fff', marginBottom: 10 }}>
-                                    <View style={styles.containerViewTicket}>
-                                        <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>Phòng chờ</CustomText>
-                                        <CustomText style={{ flexGrow: 1, color: CustomColors.primary, fontSize: 15, fontWeight: '700', paddingLeft: 4 }}>Thương gia sông hồng</CustomText>
-                                        <CustomText style={{ color: CustomColors.primary, fontSize: 15, fontWeight: '700' }}>({item.userUse + item.otherUse})</CustomText>
-                                    </View>
-                                    <View style={styles.containerViewTicket}>
-                                        <CustomText style={styles.label}>Họ và tên:</CustomText>
-                                        <CustomText style={styles.text}>{item.userId.userName}</CustomText>
-                                    </View>
-                                    <View style={styles.containerViewTicket}>
-                                        <CustomText style={styles.label}>Thời gian sử dụng:</CustomText>
-                                        <CustomText style={styles.text}>
-                                            {
-                                                item.adminConfirm === true
-                                                    ?
-                                                    `${new Date(item.timeUsed).getHours()}:${new Date(item.timeUsed).getMinutes().toString().padStart(2, '0')} - ${new Date(item.timeUsed).getDate()}/${new Date(item.timeUsed).getMonth() + 1}/${new Date(item.timeUsed).getFullYear()}`
-                                                    :
-                                                    <CustomText style={{ color: '#000', fontSize: 14, fontWeight: '700' }}>Chờ xác nhận</CustomText>
-                                            }
-                                        </CustomText>
-                                    </View>
-                                    <View style={styles.containerViewTicket}>
-                                        <CustomText style={styles.label}>Số lượt sử dụng:</CustomText>
-                                        <CustomText style={styles.text}>{item.userUse}</CustomText>
-                                    </View>
-                                    <View style={styles.containerViewTicket}>
-                                        <CustomText style={styles.label}>Số lượt khách đi kèm:</CustomText>
-                                        <CustomText style={styles.text}>{item.otherUse}</CustomText>
-                                    </View>
+                                <View style={styles.containerViewTicket}>
+                                    <CustomText style={styles.label}>Họ và tên:</CustomText>
+                                    <CustomText style={styles.text}>{item.userId.userName}</CustomText>
                                 </View>
-                            )}
-                            refreshControl={
-                                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                            }
-                        />
-                    </View>
-                </ScrollView>
+                                <View style={styles.containerViewTicket}>
+                                    <CustomText style={styles.label}>Thời gian sử dụng:</CustomText>
+                                    <CustomText style={styles.text}>
+                                        {
+                                            item.adminConfirm === true
+                                                ?
+                                                `${new Date(item.timeUsed).getHours()}:${new Date(item.timeUsed).getMinutes().toString().padStart(2, '0')} - ${new Date(item.timeUsed).getDate()}/${new Date(item.timeUsed).getMonth() + 1}/${new Date(item.timeUsed).getFullYear()}`
+                                                :
+                                                <CustomText style={{ color: '#000', fontSize: 14, fontWeight: '700' }}>Chờ xác nhận</CustomText>
+                                        }
+                                    </CustomText>
+                                </View>
+                                <View style={styles.containerViewTicket}>
+                                    <CustomText style={styles.label}>Số lượt sử dụng:</CustomText>
+                                    <CustomText style={styles.text}>{item.userUse}</CustomText>
+                                </View>
+                                <View style={styles.containerViewTicket}>
+                                    <CustomText style={styles.label}>Số lượt khách đi kèm:</CustomText>
+                                    <CustomText style={styles.text}>{item.otherUse}</CustomText>
+                                </View>
+                            </View>
+                        )}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        }
+                    />
+                </View>
             </View>
+            {/* </>
+                )}
+            /> */}
         </View>
     )
 }

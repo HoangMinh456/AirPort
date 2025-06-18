@@ -43,12 +43,12 @@ export default function NotifiModal() {
                             </TouchableOpacity>
                         </View>
                         :
-                        <TouchableOpacity onPress={() => hidden()} className="">
+                        <TouchableOpacity onPress={() => stateNotifi.onPressSingleButton !== undefined ? stateNotifi.onPressSingleButton() : hidden()} className="">
                             <CustomText style={{ backgroundColor: CustomColors.sercond }} className="text-black text-center rounded-full py-2">Đã hiểu</CustomText>
                         </TouchableOpacity>
                     }
                 </View>
             </View>
-        </Modal>
+        </Modal >
     );
 }

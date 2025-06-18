@@ -5,6 +5,7 @@ import axios from "axios";
 export const handleBarCodeRead = createAsyncThunk('dataUser/get', async (urlAPI: string) => {
     const response = await axios.get(urlAPI);
     console.log('response', response.data);
+    return response.data;
 })
 
 const dataUserSlice = createSlice({

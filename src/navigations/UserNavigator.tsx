@@ -10,6 +10,7 @@ import EditUserInforScreen from "../screens/EditUserInforScreen";
 import EditPasswordScreen from "../screens/EditPasswordScreen";
 import NumberCardScreen from "../screens/NumberCardScreen";
 import OpenCamera from "../components/OpenCamera";
+import EnterPinScreen from "../screens/EnterPinScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function UserNavigator() {
                 <Stack.Screen name="EnterEcode" component={EnterEcodeScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="EditUserInforScreen" component={EditUserInforScreen} options={{ headerShown: false }} />
                 <Stack.Screen name="EditPasswordScreen" component={EditPasswordScreen} options={{ headerShown: false }} />
+                <Stack.Screen name="EnterPin" component={EnterPinScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
         </>
         // </SafeAreaView>

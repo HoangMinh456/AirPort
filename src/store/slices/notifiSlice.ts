@@ -11,6 +11,7 @@ const notifiSlice = createSlice({
         titleButtonAccept: '',
         onPressButtonClose: undefined,
         onPressButtonAccept: undefined,
+        onPressSingleButton: undefined
     },
     reducers: {
         showOff(state) {
@@ -30,6 +31,7 @@ const notifiSlice = createSlice({
             state.titleButtonAccept = action.payload.titleButtonAccept || '';
             state.onPressButtonClose = action.payload.onPressButtonClose || undefined;
             state.onPressButtonAccept = action.payload.onPressButtonAccept || undefined;
+            state.onPressSingleButton = action.payload.onPressSingleButton || undefined;
         },
     },
 });

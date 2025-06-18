@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { changePasswordByEmail, createAccount, getUserByEmail, sendOTP, SignIn, verifyOTP } from "../thunks/authThunk";
+import { changePasswordByEmail, createAccount, getUserByEmail, sendOTP, SignIn, updateUserInformation, verifyOTP } from "../thunks/authThunk";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const authSlice = createSlice({
@@ -25,6 +25,9 @@ const authSlice = createSlice({
         },
         setDataUser(state, action) {
             state.information = action.payload;
+        },
+        setNewEmail(state, action) {
+            state.information.email = action.payload.email;
         }
     },
     extraReducers: (builder) => {
@@ -71,7 +74,7 @@ const authSlice = createSlice({
                 state.status = 'pendingSignIn';
             })
             .addCase(SignIn.fulfilled, (state: any, action: any) => {
-                console.log('payload: ', action.payload._id)
+                // console.log('payload: ', action.payload._id)
                 state.status = 'successSignIn';
                 state.information.email = action.payload.email;
                 state.information.phone = action.payload.phone;
@@ -110,8 +113,22 @@ const authSlice = createSlice({
                 state.status = 'failChangePassword';
                 state.error = action.payload;
             })
+            .addCase(updateUserInformation.pending, (state: any) => {
+                state.status = 'pendingUpdateUserInformation';
+            })
+            .addCase(updateUserInformation.fulfilled, (state, action) => {
+                state.status = 'successUpdateUserInformation';
+                state.information.email = action.payload.email;
+                state.information.phone = action.payload.phone;
+                state.information.userName = action.payload.userName;
+                state.error = ''
+            })
+            .addCase(updateUserInformation.rejected, (state, action) => {
+                state.status = 'failUpdateUserInformation';
+                state.error = action.payload as string;
+            })
     }
 })
 
-export const { logOut, setStatusIdle, setDataUser } = authSlice.actions;
+export const { logOut, setStatusIdle, setDataUser, setNewEmail } = authSlice.actions;
 export default authSlice.reducer;

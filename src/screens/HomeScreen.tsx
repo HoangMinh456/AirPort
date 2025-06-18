@@ -1,10 +1,10 @@
+import { useState } from "react";
 import { Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import FastImage from "react-native-fast-image";
-import CustomColors from "../../colors";
 import Entypo from 'react-native-vector-icons/Entypo';
+import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import Icons from "../components/Icons";
-import { useState } from "react";
 import ModalSupportPhone from "../components/ModalSupportPhone";
 
 const { width, height } = Dimensions.get('window');
@@ -68,22 +68,6 @@ export default function HomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-    container2: {
-        position: 'absolute',
-        left: 0,
-        bottom: 0,
-        zIndex: 20,
-        height: height / 12,
-        width: '100%',
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: '#ffffff',
-        elevation: 20
-    },
     container1: {
         width: width,
         position: 'relative',

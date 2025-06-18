@@ -13,27 +13,25 @@ const useNotifi = () => {
         dispatch(showLoading());
     };
 
-    const modal = (
-        {
-            title,
-            message,
-            button,
-            titleButtonClose,
-            onPressButtonClose,
-            titleButtonAccept,
-            onPressButtonAccept
-        }
-            :
-            {
-                title: string,
-                message?: string,
-                button?: boolean,
-                titleButtonClose?: string,
-                onPressButtonClose?: any,
-                titleButtonAccept?: string,
-                onPressButtonAccept?: any
-            }
-    ) => {
+    const modal = ({
+        title,
+        message,
+        button,
+        titleButtonClose,
+        onPressButtonClose,
+        titleButtonAccept,
+        onPressButtonAccept,
+        onPressSingleButton
+    }: {
+        title: string,
+        message?: string,
+        button?: boolean,
+        titleButtonClose?: string,
+        onPressButtonClose?: any,
+        titleButtonAccept?: string,
+        onPressButtonAccept?: any
+        onPressSingleButton?: any
+    }) => {
         // console.log('Đã kích hoạt modal');
         return dispatch(
             ShowModal({
@@ -43,7 +41,8 @@ const useNotifi = () => {
                 titleButtonClose: titleButtonClose,
                 onPressButtonClose: onPressButtonClose,
                 titleButtonAccept: titleButtonAccept,
-                onPressButtonAccept: onPressButtonAccept
+                onPressButtonAccept: onPressButtonAccept,
+                onPressSingleButton: onPressSingleButton
             })
         );
     };

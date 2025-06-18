@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "../store/store";
 import useNotifi from "../hooks/useNotifi";
 import { sendOTP, verifyOTP } from "../store/thunks/authThunk";
+import { setNewEmail } from "../store/slices/authSlice";
 
 const { width, height } = Dimensions.get('window');
 
@@ -100,10 +101,23 @@ export default function EnterPinScreen({ navigation, route }: any) {
         } else if (authStatus && authStatus === 'failVerify') {
             modal({ title: 'Thông báo', message: authError || 'Xác thực thất bại' })
             return
-        } else if (authStatus && authStatus === 'successVerify') {
-            navigation.navigate('CreatePassword', { userEmail: userEmail, type: type ? type : '' });
+        } else if (authStatus && authStatus === 'successVerify' && type === 'forgotPassword') {
+            navigation.navigate('CreatePassword', { userEmail: userEmail, type: type });
             return
-        } else {
+        } else if (authStatus && authStatus === 'successVerify' && type === 'confirmNewEmail') {
+            modal({
+                title: 'Thông báo',
+                message: 'Xác minh thành công',
+                onPressSingleButton: () => {
+                    hidden();
+                    // setTimeout(() => {
+                    dispatch(setNewEmail({ email: userEmail }));
+                    // }, 100)
+                    navigation.goBack();
+                }
+            })
+        }
+        else {
             hidden()
             return
         }

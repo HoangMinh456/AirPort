@@ -1,12 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
-import User from "./NumberCardScreen";
-import HistoryScreen from "./HistoryScreen";
 import Icons from "../components/Icons";
 import CustomColors from "../../colors";
 import CustomText from "../components/CustomText";
 import UserInforScreen from "./UserInforScreen";
 import { View } from "react-native";
+import HistoryScreen from "./HistoryScreen";
 
 const Tab = createBottomTabNavigator();
 

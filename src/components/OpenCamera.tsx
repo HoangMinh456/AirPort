@@ -5,6 +5,8 @@ import { RNCamera } from "react-native-camera";
 import CustomText from "./CustomText";
 import { useAppDispatch } from "../store/store";
 import { changeMyTicket, changeTicket, saveTicket } from "../store/slices/ticketInforSclice";
+import { API } from "@env";
+import { getECodeByQR } from "../store/thunks/memberCardThunk";
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,9 +52,22 @@ export default function OpenCamera({ route }: any) {
     }
 
     const handleOnBarCodeRead = ({ data }: any) => {
-        console.log('data: ', data)
+        console.log('data: ', data);
+        if (cameraRef.current) {
+            console.log('cameraRef')
+            if (type === 'qr') {
+                console.log('type = qr')
+                try {
+                    dispatch(getECodeByQR({ API_URL: data }));
+                    navigation.goBack();
+                    return;
+                } catch (error) {
+                    console.log('Lỗi ở handleOnBarCodeRead: ', error)
+                }
+            }
+        }
         // dispatch(handleBarCodeRead(data));
-        navigation.goBack()
+        // navigation.goBack();
     }
 
     if (type === 'camera') {
@@ -61,7 +76,7 @@ export default function OpenCamera({ route }: any) {
                 ref={cameraRef}
                 type={RNCamera.Constants.Type.back}
                 flashMode={RNCamera.Constants.FlashMode.off}
-                style={{ flex: 1 }}
+                style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
                 captureAudio={false}
                 androidCameraPermissionOptions={{
                     title: 'Quyền truy cập camera',
@@ -88,6 +103,7 @@ export default function OpenCamera({ route }: any) {
         )
     }
 
+    //Quét QR Code
     if (type === 'qr') {
         return (
             <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flex: 1, backgroundColor: '#000000' }}>

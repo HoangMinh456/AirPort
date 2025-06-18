@@ -66,3 +66,13 @@ export const changePasswordByEmail = createAsyncThunk('auth/changePassword', asy
         return rejectWithValue(error)
     }
 })
+
+export const updateUserInformation = createAsyncThunk('auth/updateUserInformation', async ({ userId, email, phone, userName }: { userId: string, email: string, phone: string, userName: string }, { rejectWithValue }) => {
+    try {
+        const response = await axios.post(`${API}/updateUserInformation`, { userId, email, phone, userName });
+        return response.data;
+    } catch (error) {
+        console.log('Lỗi ở "auth/updateUserInformation"', error);
+        return rejectWithValue(error)
+    }
+})

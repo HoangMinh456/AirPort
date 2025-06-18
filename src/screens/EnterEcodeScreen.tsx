@@ -15,12 +15,6 @@ import { saveNumberUses } from "../store/slices/ticketInforSclice";
 const { width, height } = Dimensions.get('window');
 
 export default function EnterEcodeScreen({ navigation }: any) {
-    const { control, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: {
-            userUse: '0',
-            otherUse: '0'
-        },
-    })
     const [swichCase, setSwitchCase] = useState<string>('ENTER_ECODE');
     const { modal, loading, hidden } = useNotifi();
     const dispatch = useAppDispatch();
@@ -28,7 +22,29 @@ export default function EnterEcodeScreen({ navigation }: any) {
     const memberCardStatus = useSelector((state: any) => state.memberCard.status);
     const userInfomation = useSelector((state: any) => state.memberCard.userInfomation);
     const errorMemberCard = useSelector((state: any) => state.memberCard.error);
-    // console.log('userInfomation: ', userInfomation)
+    console.log('userInfomation.userName: ', userInfomation.userName)
+    console.log('userInfomation.password: ', userInfomation.password)
+    //Form
+    const { control, handleSubmit, formState: { errors }, reset } = useForm({
+        defaultValues: {
+            userUse: '1',
+            otherUse: '0',
+            userName: userInfomation.userName || '',
+            password: userInfomation.password || '',
+        },
+    })
+
+    //Cập nhật lại userName và password khi có dữ liệu hoặc bị thay đổi dữ liệu
+    useEffect(() => {
+        if (userInfomation?.userName && userInfomation?.password) {
+            reset({
+                userUse: '1',
+                otherUse: '0',
+                userName: userInfomation.userName,
+                password: userInfomation.password,
+            });
+        }
+    }, [userInfomation?.userName, userInfomation?.password]);
 
     //Dùng cho components EnterOwnerInfor
     const [checkInfor, setCheckInfor] = useState<boolean>(false);
